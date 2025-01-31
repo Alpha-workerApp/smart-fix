@@ -1,0 +1,5 @@
+user:
+  server:
+    host: "localhost"
+    port: 8000
+    debug: True

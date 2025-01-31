@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "smart-fix-backend"
+version = "0.1.0"
+description = ""
+authors = ["GoppyKrishna-77 <goppykrishna7077@gmail.com>"]
+readme = "README.md"
+packages = [{include = "smart_fix_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^3.1.0"
+hydra-core = "^1.3.2"
+pydantic = "^2.10.6"
+sqlalchemy = "^2.0.37"
+python-dotenv = "^1.0.1"
+redis = "^5.2.1"
+appwrite = "^7.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
