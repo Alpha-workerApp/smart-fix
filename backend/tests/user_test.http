@@ -1,0 +1,29 @@
+# Kindly check the request url before executing
+
+### Create a user
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "phone": "1234567891",
+  "name": "John Kris",
+  "password": "secretpassword"
+}
+
+### Get user by UID
+GET http://localhost:8000/users/1
+
+### Get User by Email
+GET http://localhost:8000/users?email=john.doe@example.com
+
+### Update User by UID
+PUT http://localhost:8000/users/2
+Content-Type: application/json
+
+{
+  "name": "Updated Test User" 
+}
+
+### Delete User by UID
+DELETE http://localhost:8000/users/2

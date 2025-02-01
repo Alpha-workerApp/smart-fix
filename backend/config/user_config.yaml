@@ -1,5 +1,13 @@
 user:
-  server:
-    host: "localhost"
-    port: 8000
-    debug: True
+    server:
+        host: "localhost"
+        port: 8000
+        debug: True
+    database:
+        url: "sqlite:///./database/user.sqlite3"
+    logger:
+        name: "USER"
+        level: "INFO"
+        enable_console_logging: True
+        enable_file_logging: True
+        log_dir: "logs/service_logs"
