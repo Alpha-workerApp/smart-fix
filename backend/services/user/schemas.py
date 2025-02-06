@@ -6,7 +6,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     phone: str
     name: str
-    password: str
+    hashed_password: str
 
     @field_validator("phone")
     @classmethod
@@ -20,6 +20,7 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
     name: Optional[str] = None
+    hashed_password: Optional[str] = None
 
 
 class User(BaseModel):

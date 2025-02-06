@@ -1,0 +1,35 @@
+# Kindly check the request url before executing
+
+### Create a technician [hashed_password = sha256_hash("secretpassword")]
+POST http://localhost:8001/technicians
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com",
+  "phone": "9876543210",
+  "name": "Jane Doe",
+  "id_proof_type": "Driving License",
+  "id_proof_number": "DL1234567890",
+  "hashed_password": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5",
+  "specialization": "Electrician"
+}
+
+### Get technician by TID
+GET http://localhost:8001/technicians/1
+
+### Get Technician by Email
+GET http://localhost:8001/technicians?email=jane.doe@example.com
+
+### Update Technician by TID
+PUT http://localhost:8001/technicians/1
+Content-Type: application/json
+
+{
+  "specialization": "Plumber" 
+}
+
+### Delete Technician by TID
+DELETE http://localhost:8001/technicians/1
+
+### Get Available Technicians (Example)
+GET http://localhost:8001/technicians/available?specialization=Electrician&longitude=77.5946&latitude=12.9716

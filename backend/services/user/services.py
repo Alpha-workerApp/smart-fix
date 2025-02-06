@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from services.user.schemas import UserCreate, UserUpdate
 from services.user.models import User, Base
-from shared.utils import hash_password, get_logger
+from shared.utils import get_logger
 
 
 class UserService:
@@ -25,14 +25,7 @@ class UserService:
 
         self.logger.debug("Registering new user: %s", user_data.email)
 
-        hashed_password = hash_password(user_data.password)
-
-        user: User = User(
-            email=user_data.email,
-            phone=user_data.phone,
-            name=user_data.name,
-            hashed_password=hashed_password,
-        )
+        user: User = User(**user_data.model_dump())
 
         try:
             self.db.add(user)

@@ -21,7 +21,7 @@ def create_user():
 
     Expects:
       - POST request to /users
-      - JSON request body with 'name' and 'email' fields.
+      - JSON request body with 'name', 'email', 'phone' and 'encrypted_password' fields.
 
     Returns:
       - 201 Created: JSON response with the created user data.
@@ -101,7 +101,7 @@ def update_user(user_id: int):
 
     Expects:
       - PUT request to /users/<int:user_id>
-      - JSON request body with optional 'name' and 'email' fields.
+      - JSON request body with at least any one of these fields 'name', 'email', 'phone' or 'encrypted_password'.
 
     Returns:
       - 200 OK: JSON response with the updated user data.
@@ -155,7 +155,7 @@ def main(cfg: DictConfig):
     global user_service
 
     logger.info("Initializing User service")
-    user_service = UserService(cfg.user.database.url)
+    user_service = UserService(cfg.database.url)
 
     logger.info("Starting Flask server...")
     app.run(**cfg.user.server)

@@ -1,9 +1,8 @@
 import os
 import logging
-import bcrypt
 
 from hydra import compose, initialize
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from functools import wraps
 from datetime import datetime
 
@@ -16,16 +15,13 @@ def with_hydra_config(func):
         with initialize(version_base=None, config_path="../config"):
             cfg: DictConfig = compose(config_name="config")
 
+            cli_args = OmegaConf.from_cli()
+
+            cfg = OmegaConf.merge(cfg, cli_args)
+
         return func(cfg, *args, **kwargs)
 
     return wrapper
-
-
-def hash_password(password: str):
-    pwd_bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
-    return hashed_password
 
 
 @with_hydra_config
@@ -43,6 +39,17 @@ def get_logger(cfg: DictConfig, service_name: str):
         formatter = logging.Formatter(
             "[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s"
         )
+
+        if cfg.app_logger.enable_logging:
+            log_filename = cfg.app_logger.log_file
+            log_filename = os.path.join(cfg.app_logger.log_dir, log_filename)
+
+            file_handler = logging.FileHandler(log_filename)
+            file_handler.setLevel(logger_cfg.level)
+
+            file_handler.setFormatter(formatter)
+
+            logger.addHandler(file_handler)
 
         if logger_cfg.enable_console_logging:
             stream_handler = logging.StreamHandler()

@@ -1,10 +1,10 @@
-user:
+technician:
     server:
         host: "localhost"
-        port: 8000
+        port: 8001
         debug: True
     logger:
-        name: "USER"
+        name: "TECHNICIAN"
         level: "INFO"
         enable_console_logging: True
         enable_file_logging: True

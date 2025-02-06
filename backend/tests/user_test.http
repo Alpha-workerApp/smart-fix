@@ -1,14 +1,14 @@
 # Kindly check the request url before executing
 
-### Create a user
+### Create a user [hashed_password = sha256_hash("secretpassword")]
 POST http://localhost:8000/users
 Content-Type: application/json
 
 {
   "email": "john.doe@example.com",
   "phone": "1234567891",
-  "name": "John Kris",
-  "password": "secretpassword"
+  "name": "John Doe",
+  "hashed_password": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5"
 }
 
 ### Get user by UID
@@ -18,7 +18,7 @@ GET http://localhost:8000/users/1
 GET http://localhost:8000/users?email=john.doe@example.com
 
 ### Update User by UID
-PUT http://localhost:8000/users/2
+PUT http://localhost:8000/users/1
 Content-Type: application/json
 
 {
@@ -26,4 +26,4 @@ Content-Type: application/json
 }
 
 ### Delete User by UID
-DELETE http://localhost:8000/users/2
+DELETE http://localhost:8000/users/1

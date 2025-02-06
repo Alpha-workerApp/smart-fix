@@ -1,6 +1,16 @@
 defaults:
     - user_config
+    - technician_config
     - _self_
+
+database:
+    db_file: "hot_start.sqlite3"
+    url: "sqlite:///./database/${database.db_file}"
+
+app_logger:
+    enable_logging: True
+    log_dir: "logs"
+    log_file: "main.log"
 
 hydra:
     output_subdir: "../logs/hydra_logs/"
