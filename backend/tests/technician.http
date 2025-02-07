@@ -1,7 +1,9 @@
-# Kindly check the request url before executing
+# Kindly check the server port for 'technician' service before executing
+
+@port=8001
 
 ### Create a technician [hashed_password = sha256_hash("secretpassword")]
-POST http://localhost:8001/technicians
+POST http://localhost:{{port}}/technicians
 Content-Type: application/json
 
 {
@@ -15,13 +17,13 @@ Content-Type: application/json
 }
 
 ### Get technician by TID
-GET http://localhost:8001/technicians/1
+GET http://localhost:{{port}}/technicians/1
 
 ### Get Technician by Email
-GET http://localhost:8001/technicians?email=jane.doe@example.com
+GET http://localhost:{{port}}/technicians?email=jane.doe@example.com
 
 ### Update Technician by TID
-PUT http://localhost:8001/technicians/1
+PUT http://localhost:{{port}}/technicians/1
 Content-Type: application/json
 
 {
@@ -29,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Delete Technician by TID
-DELETE http://localhost:8001/technicians/1
+DELETE http://localhost:{{port}}/technicians/1
 
 ### Get Available Technicians (Example)
-GET http://localhost:8001/technicians/available?specialization=Electrician&longitude=77.5946&latitude=12.9716
+GET http://localhost:{{port}}/technicians/available?specialization=Electrician&longitude=77.5946&latitude=12.9716

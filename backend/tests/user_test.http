@@ -1,7 +1,9 @@
-# Kindly check the request url before executing
+# Kindly check the server port for 'user' service before executing
+
+@port=8000
 
 ### Create a user [hashed_password = sha256_hash("secretpassword")]
-POST http://localhost:8000/users
+POST http://localhost:{{port}}/users
 Content-Type: application/json
 
 {
@@ -12,13 +14,13 @@ Content-Type: application/json
 }
 
 ### Get user by UID
-GET http://localhost:8000/users/1
+GET http://localhost:{{port}}/users/1
 
 ### Get User by Email
-GET http://localhost:8000/users?email=john.doe@example.com
+GET http://localhost:{{port}}/users?email=john.doe@example.com
 
 ### Update User by UID
-PUT http://localhost:8000/users/1
+PUT http://localhost:{{port}}/users/1
 Content-Type: application/json
 
 {
@@ -26,4 +28,4 @@ Content-Type: application/json
 }
 
 ### Delete User by UID
-DELETE http://localhost:8000/users/1
+DELETE http://localhost:{{port}}/users/1

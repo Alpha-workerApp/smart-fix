@@ -6,12 +6,37 @@
 $ poetry add urllib3@1.26.15 Flask hydra-core pydantic pydantic[email] SQLAlchemy db-sqlite3 redis python-dotenv appwrite passlib
 ```
 
-### Run User service
+### Run the Services Individually
 
 ```shell
 $ cd backend
 
 $ python -m services.user.api
+
+$ python -m services.technician.api
+
+$ python -m services.user.api user.server.port=5000
+
+$ python -m services.technician.api technician.server.port=5001
+```
+
+### Run the Services using scripts/run_services.py
+
+```shell
+$ cd backend
+
+$ python .\scripts\run_services all
+
+$ python .\scripts\run_services user
+
+$ python .\scripts\run_services user technician
+
+$ python .\scripts\run_services user technician -c technician.server.port=5001
+
+$ python .\scripts\run_services user technician --config technician.server.port=5001
+
+$ python .\scripts\run_services -h
+
 ```
 
 ## Setup the environment for backend
