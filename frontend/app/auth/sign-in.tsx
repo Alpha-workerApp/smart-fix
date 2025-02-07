@@ -15,7 +15,13 @@ const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-
+  const handleLogin = () => {
+    // if (!username || !password) {
+    //   Alert.alert("Validation Error", "Please enter both username and password.");
+    //   return;
+    // }
+    router.push("/auth/verify");
+  };
 
   return (
     <ImageBackground
@@ -29,9 +35,7 @@ const SignIn = () => {
         Enter your Details
       </Text>
 
-      <TouchableOpacity
-        className="bg-[#f4f4f4] py-3 px-24 rounded-lg"
-      >
+      <TouchableOpacity className="bg-[#f4f4f4] py-3 px-24 rounded-lg">
         <View className="flex flex-row gap-5 justify-center items-center">
           <Image
             source={require("../../assets/images/google_icon.png")}
@@ -59,8 +63,9 @@ const SignIn = () => {
 
       <TouchableOpacity
         className="px-[145px] my-5 py-4 bg-[#1e1e4a] rounded-lg"
+        onPress={handleLogin}
       >
-        <Text className="text-white font-nunito-semibold">Login</Text>
+        <Text className="text-white font-nunito-semibold">Next</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
