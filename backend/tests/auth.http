@@ -1,0 +1,72 @@
+
+@port=8002
+@hashed_password="95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5"
+
+### User Registration
+POST http://127.0.0.1:{{port}}/register
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "phone": "1234567890",
+  "name": "John Doe",
+  "hashed_password": {{hashed_password}}
+}
+
+###
+
+### Technician Registration
+POST http://127.0.0.1:{{port}}/technician_register
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com",
+  "phone": "9876543210",
+  "name": "Jane Doe",
+  "id_proof_type": "Aadhaar",
+  "id_proof_number": "123456789101",
+  "hashed_password": {{hashed_password}},
+  "service_category": "Electrical Services"
+}
+
+###
+
+### User Login (Get JWT)
+POST http://127.0.0.1:{{port}}/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "hashed_password": {{hashed_password}}
+}
+
+### (After successful login, copy the token from the response)
+@user_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJOb25lIiwidXNlcl90eXBlIjoidXNlciIsImV4cCI6MTczOTkxNDY0MSwiaWF0IjoxNzM5MDUwNjQxfQ.bFIaR-DRBTIOl-6qzWIIkU8883Vlf6-iDWR1dRHNdrw
+
+
+###
+
+### Technician Login (Get JWT)
+POST http://127.0.0.1:{{port}}/technician_login
+Content-Type: application/json
+
+{
+  "email": "jane.doe@example.com", 
+  "hashed_password": {{hashed_password}}
+}
+
+### (After successful login, copy the token from the response)
+@technician_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiJOb25lIiwidXNlcl90eXBlIjoidGVjaG5pY2lhbiIsImV4cCI6MTczOTIyMzQ4NiwiaWF0IjoxNzM5MDUwNjg2fQ.O0W0rOPt26pvKjMtCgEAYiWjMvjyeIWtNPJk7EGdEhY
+
+###
+
+### Protected Route (User - requires JWT)
+GET http://127.0.0.1:{{port}}/protected
+Authorization: Bearer {{user_jwt}}
+
+
+###
+
+### Protected Route (Technician - requires JWT)
+GET http://127.0.0.1:{{port}}/technician_protected
+Authorization: Bearer {{technician_jwt}}

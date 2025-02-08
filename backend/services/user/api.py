@@ -39,25 +39,25 @@ def create_user():
         return jsonify({"error": type(e).__name__}), 409
 
 
-@app.route("/users/<int:user_id>", methods=["GET"])
-def get_user(user_id: int):
+@app.route("/users/<uid>", methods=["GET"])
+def get_user(uid: str):
     """
     Retrieves a specific user by ID.
 
     Args:
-      - user_id: The ID of the user to retrieve.
+      - uid: The ID of the user to retrieve.
 
     Expects:
-      - GET request to /users/<int:user_id>
+      - GET request to /users/<uid>
 
     Returns:
       - 200 OK: JSON response with the user data.
       - 404 Not Found: If the user is not found.
     """
 
-    logger.info(f"Received {request.method} request to /users/{user_id}")
+    logger.info(f"Received {request.method} request to /users/{uid}")
 
-    user: User = user_service.get_user(user_id)
+    user: User = user_service.get_user(uid)
     if user:
         return jsonify(user.to_dict()), 200
     else:
@@ -91,16 +91,43 @@ def get_user_by_email():
         return jsonify({"error": "User not found"}), 404
 
 
-@app.route("/users/<int:user_id>", methods=["PUT"])
-def update_user(user_id: int):
+@app.route("/users/auth", methods=["GET"])
+def get_hashed_password_by_email():
+    """
+    Retrieves a hashed_password by email address.
+
+    Expects:
+      - GET request to /users
+      - Query parameter 'email': The email address of the user to retrieve.
+
+    Returns:
+      - 200 OK: JSON response with the hashed password.
+      - 404 Not Found: If the user is not found.
+    """
+
+    logger.info(
+        f"Received {request.method} request to /users/auth?email={request.args.get('email')}"
+    )
+
+    email: str = request.args.get("email")
+    user: User = user_service.get_user_by_email(email)
+
+    if user:
+        return jsonify({"hashed_password": user.hashed_password}), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+
+@app.route("/users/<uid>", methods=["PUT"])
+def update_user(uid: str):
     """
     Updates an existing user.
 
     Args:
-      - user_id: The ID of the user to update.
+      - uid: The ID of the user to update.
 
     Expects:
-      - PUT request to /users/<int:user_id>
+      - PUT request to /users/<uid>
       - JSON request body with at least any one of these fields 'name', 'email', 'phone' or 'encrypted_password'.
 
     Returns:
@@ -109,11 +136,11 @@ def update_user(user_id: int):
       - 409 Conflict: If update fails due to a conflict.
     """
 
-    logger.info(f"Received {request.method} request to /users/{user_id}")
+    logger.info(f"Received {request.method} request to /users/{uid}")
 
     try:
         update_data = UserUpdate(**request.get_json())
-        updated_user: User = user_service.update_user(user_id, update_data)
+        updated_user: User = user_service.update_user(uid, update_data)
         if updated_user:
             return jsonify(updated_user.to_dict()), 200
         else:
@@ -124,25 +151,25 @@ def update_user(user_id: int):
         return jsonify({"error": type(e).__name__}), 409
 
 
-@app.route("/users/<int:user_id>", methods=["DELETE"])
-def delete_user(user_id: int):
+@app.route("/users/<uid>", methods=["DELETE"])
+def delete_user(uid: str):
     """
     Deletes a user.
 
     Args:
-      - user_id: The ID of the user to delete.
+      - uid: The ID of the user to delete.
 
     Expects:
-      - DELETE request to /users/<int:user_id>
+      - DELETE request to /users/<uid>
 
     Returns:
       - 200 OK: JSON response with a success message.
       - 404 Not Found: If the user is not found.
     """
 
-    logger.info(f"Received {request.method} request to /users/{user_id}")
+    logger.info(f"Received {request.method} request to /users/{uid}")
 
-    user: User = user_service.delete_user(user_id)
+    user: User = user_service.delete_user(uid)
 
     if user:
         return jsonify({"message": "User deleted successfully"}), 200

@@ -1,6 +1,7 @@
-from typing import Optional
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from uuid import UUID
+from typing import Optional
 
 from services.user.schemas import UserCreate, UserUpdate
 from services.user.models import User, Base
@@ -38,7 +39,7 @@ class UserService:
             self.db.rollback()
             raise e
 
-    def get_user(self, uid: int) -> Optional[User]:
+    def get_user(self, uid: UUID) -> Optional[User]:
         """Gets a user by their UID"""
         user = self.db.query(User).filter_by(uid=uid).first()
 
@@ -62,7 +63,7 @@ class UserService:
 
         return user
 
-    def update_user(self, uid: int, update_data: UserUpdate) -> Optional[User]:
+    def update_user(self, uid: UUID, update_data: UserUpdate) -> Optional[User]:
         """Updates a user's details"""
         self.logger.debug("Updating user with ID: %s", uid)
 
@@ -81,7 +82,7 @@ class UserService:
 
         return user
 
-    def delete_user(self, uid: int) -> Optional[User]:
+    def delete_user(self, uid: UUID) -> Optional[User]:
         """Deletes a user"""
 
         self.logger.debug("Deleting user with ID: %s", uid)

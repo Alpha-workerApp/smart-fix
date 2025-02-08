@@ -1,15 +1,18 @@
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
+
+from shared.enums import IDProofType, ServiceCategory
 
 
 class TechnicianCreate(BaseModel):
     email: EmailStr
     phone: str
     name: str
-    id_proof_type: str
+    id_proof_type: IDProofType
     id_proof_number: str
     hashed_password: str
-    specialization: str
+    service_category: ServiceCategory
 
     @field_validator("phone")
     @classmethod
@@ -23,9 +26,9 @@ class TechnicianUpdate(BaseModel):
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
     name: Optional[str] = None
-    id_proof_type: Optional[str] = None
+    id_proof_type: Optional[IDProofType] = None
     id_proof_number: Optional[str] = None
-    specialization: Optional[str] = None
+    service_category: Optional[ServiceCategory] = None
     rating: Optional[float] = None
     longitude: Optional[float] = None
     latitude: Optional[float] = None
@@ -33,14 +36,14 @@ class TechnicianUpdate(BaseModel):
 
 
 class Technician(BaseModel):
-    TID: int
+    TID: UUID
     email: EmailStr
     phone: str
     name: str
-    id_proof_type: str
+    id_proof_type: IDProofType
     id_proof_number: str
     is_verified: bool
-    specialization: str
+    service_category: ServiceCategory
     rating: Optional[float]
     longitude: Optional[float]
     latitude: Optional[float]

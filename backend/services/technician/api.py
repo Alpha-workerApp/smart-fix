@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from uuid import UUID
 from omegaconf import DictConfig
 from dotenv import load_dotenv
 
@@ -21,7 +22,7 @@ def create_technician():
 
     Expects:
       - POST request to /technicians
-      - JSON request body with 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'specialization' and 'hashed_password' fields.
+      - JSON request body with 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'service_category' and 'hashed_password' fields.
 
     Returns:
       - 201 Created: JSON response with the created technician data.
@@ -38,28 +39,34 @@ def create_technician():
 
         return jsonify(new_technician.to_dict()), 201
     except Exception as e:
+        logger.error(f"Error in Registering technician: {str(e)}")
         return jsonify({"error": type(e).__name__}), 409
 
 
-@app.route("/technicians/<int:TID>", methods=["GET"])
-def get_technician(TID: int):
+@app.route("/technicians/<tid>", methods=["GET"])
+def get_technician(tid: str):
     """
     Retrieves a specific technician by ID.
 
     Args:
-      - TID: The ID of the technician to retrieve.
+      - tid: The ID of the technician to retrieve.
 
     Expects:
-      - GET request to /technicians/<int:TID>
+      - GET request to /technicians/<tid>
 
     Returns:
       - 200 OK: JSON response with the technician data.
       - 404 Not Found: If the technician is not found.
     """
 
-    logger.info(f"Received {request.method} request to /technicians/{TID}")
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
 
-    technician: Technician = technician_service.get_technician(TID)
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
+
+    technician: Technician = technician_service.get_technician(tid_uuid)
     if technician:
         return jsonify(technician.to_dict()), 200
     else:
@@ -93,17 +100,44 @@ def get_technician_by_email():
         return jsonify({"error": "Technician not found"}), 404
 
 
-@app.route("/technicians/<int:TID>", methods=["PUT"])
-def update_technician(TID: int):
+@app.route("/technicians/auth", methods=["GET"])
+def get_hashed_password_by_email():
+    """
+    Retrieves a hashed password by email address.
+
+    Expects:
+      - GET request to /technicians
+      - Query parameter 'email': The email address of the technician to retrieve.
+
+    Returns:
+      - 200 OK: JSON response with the hashed password.
+      - 404 Not Found: If the technician is not found.
+    """
+
+    logger.info(
+        f"Received {request.method} request to /technicians/auth?email={request.args.get('email')}"
+    )
+
+    email: str = request.args.get("email")
+    technician: Technician = technician_service.get_technician_by_email(email)
+
+    if technician:
+        return jsonify({"hashed_password": technician.hashed_password}), 200
+    else:
+        return jsonify({"error": "Technician not found"}), 404
+
+
+@app.route("/technicians/<tid>", methods=["PUT"])
+def update_technician(tid: str):
     """
     Updates an existing technician.
 
     Args:
-      - TID: The ID of the technician to update.
+      - tid: The ID of the technician to update.
 
     Expects:
-      - PUT request to /technicians/<int:TID>
-      - JSON request body with at least any one of these fields 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'specialization'.
+      - PUT request to /technicians/<tid>
+      - JSON request body with at least any one of these fields 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'service_category'.
 
     Returns:
       - 200 OK: JSON response with the updated technician data.
@@ -111,12 +145,17 @@ def update_technician(TID: int):
       - 409 Conflict: If update fails due to a conflict.
     """
 
-    logger.info(f"Received {request.method} request to /technicians/{TID}")
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
+
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
 
     try:
         update_data = TechnicianUpdate(**request.get_json())
         updated_technician: Technician = technician_service.update_technician(
-            TID, update_data
+            tid_uuid, update_data
         )
         if updated_technician:
             return jsonify(updated_technician.to_dict()), 200
@@ -128,25 +167,30 @@ def update_technician(TID: int):
         return jsonify({"error": type(e).__name__}), 409
 
 
-@app.route("/technicians/<int:TID>", methods=["DELETE"])
-def delete_technician(TID: int):
+@app.route("/technicians/<tid>", methods=["DELETE"])
+def delete_technician(tid: str):
     """
     Deletes a technician.
 
     Args:
-      - TID: The ID of the technician to delete.
+      - tid: The ID of the technician to delete.
 
     Expects:
-      - DELETE request to /technicians/<int:TID>
+      - DELETE request to /technicians/<tid>
 
     Returns:
       - 200 OK: JSON response with a success message.
       - 404 Not Found: If the technician is not found.
     """
 
-    logger.info(f"Received {request.method} request to /technicians/{TID}")
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
 
-    technician: Technician = technician_service.delete_technician(TID)
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
+
+    technician: Technician = technician_service.delete_technician(tid_uuid)
 
     if technician:
         return jsonify({"message": "Technician deleted successfully"}), 200
@@ -157,12 +201,12 @@ def delete_technician(TID: int):
 @app.route("/technicians/available", methods=["GET"])
 def get_available_technicians():
     """
-    Gets available technicians based on specialization, longitude, and latitude.
+    Gets available technicians based on service_category, longitude, and latitude.
 
     Expects:
       - GET request to /technicians/available
       - Query parameters:
-        - 'specialization': The specialization of the technicians to retrieve.
+        - 'service_category': The service_category of the technicians to retrieve.
         - 'longitude': The longitude of the location.
         - 'latitude': The latitude of the location.
 
@@ -173,11 +217,11 @@ def get_available_technicians():
 
     logger.info(f"Received {request.method} request to /technicians/available")
 
-    specialization = request.args.get("specialization")
+    service_category = request.args.get("service_category")
     longitude = request.args.get("longitude")
     latitude = request.args.get("latitude")
 
-    if not specialization or not longitude or not latitude:
+    if not service_category or not longitude or not latitude:
         return jsonify({"error": "Missing required query parameters"}), 400
 
     try:
@@ -187,7 +231,7 @@ def get_available_technicians():
         return jsonify({"error": "Invalid longitude or latitude values"}), 400
 
     available_technicians = technician_service.get_available_technicians(
-        specialization, longitude, latitude
+        service_category, longitude, latitude
     )
     return jsonify([tech.to_dict() for tech in available_technicians]), 200
 

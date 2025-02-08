@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+import uuid
+from sqlalchemy import Column, UUID, String
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -7,7 +8,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
 
-    uid = Column(Integer, primary_key=True, autoincrement=True)
+    uid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(50), unique=True, nullable=False)
     phone = Column(String(10), unique=True, nullable=False)
     name = Column(String(50))
@@ -15,7 +16,7 @@ class User(Base):
 
     def to_dict(self):
         return {
-            "uid": self.uid,
+            "uid": str(self.uid),
             "email": self.email,
             "phone": self.phone,
             "name": self.name,

@@ -1,6 +1,7 @@
 defaults:
     - user_config
     - technician_config
+    - auth_config
     - _self_
 
 database:

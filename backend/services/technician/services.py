@@ -1,10 +1,12 @@
-from typing import Optional, List
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from uuid import UUID
+from typing import Optional, List
 
+from shared.utils import get_logger
+from shared.enums import ServiceCategory
 from services.technician.schemas import TechnicianCreate, TechnicianUpdate
 from services.technician.models import Technician, Base
-from shared.utils import get_logger
 
 
 class TechnicianService:
@@ -40,7 +42,7 @@ class TechnicianService:
             self.db.rollback()
             raise e
 
-    def get_technician(self, TID: int) -> Optional[Technician]:
+    def get_technician(self, TID: UUID) -> Optional[Technician]:
         """Gets a technician by their TID"""
         technician = self.db.query(Technician).filter_by(TID=TID).first()
 
@@ -65,7 +67,7 @@ class TechnicianService:
         return technician
 
     def update_technician(
-        self, TID: int, update_data: TechnicianUpdate
+        self, TID: UUID, update_data: TechnicianUpdate
     ) -> Optional[Technician]:
         """Updates a technician's details"""
         self.logger.debug("Updating technician with ID: %s", TID)
@@ -85,7 +87,7 @@ class TechnicianService:
 
         return technician
 
-    def delete_technician(self, TID: int) -> Optional[Technician]:
+    def delete_technician(self, TID: UUID) -> Optional[Technician]:
         """Deletes a technician"""
 
         self.logger.debug("Deleting technician with ID: %s", TID)
@@ -103,16 +105,24 @@ class TechnicianService:
         return technician
 
     def get_available_technicians(
-        self, specialization: str, longitude: float, latitude: float
+        self, service_category_str: str, longitude: float, latitude: float
     ) -> List[Technician]:
-        """Gets available technicians based on specialization and location"""
+        """Gets available technicians based on service_category and location"""
 
-        self.logger.debug(f"Getting available technicians for {specialization}")
+        self.logger.debug(f"Getting available technicians for {service_category_str}")
+
+        try:
+            service_category = ServiceCategory(service_category_str)
+        except ValueError:
+            valid_values = [e.value for e in ServiceCategory]
+            error_message = f"Invalid value for ServiceCategory: {service_category_str}. Valid values are: {', '.join(valid_values)}"
+            self.logger.error(error_message)
+            raise ValueError(error_message)
 
         available_technicians = (
             self.db.query(Technician)
             .filter(
-                Technician.specialization == specialization,
+                Technician.service_category == service_category,  # Use the enum member
                 Technician.is_available == True,
             )
             .all()

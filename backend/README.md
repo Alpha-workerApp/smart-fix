@@ -1,9 +1,12 @@
 # smart-fix backend
 
-### Poetry add command
+### Before you run
 
-```shell
-$ poetry add urllib3@1.26.15 Flask hydra-core pydantic pydantic[email] SQLAlchemy db-sqlite3 redis python-dotenv appwrite passlib
+-   Create a .env file in the `/backend` directory.
+-   Add the following environment variables in it (Copy and paste the following)
+
+```sh
+SECRET_KEY=9edb76cc-4bf6-42a1-8837-1e964e57a96d
 ```
 
 ### Run the Services Individually

@@ -10,28 +10,33 @@ Content-Type: application/json
   "email": "jane.doe@example.com",
   "phone": "9876543210",
   "name": "Jane Doe",
-  "id_proof_type": "Driving License",
-  "id_proof_number": "DL1234567890",
+  "id_proof_type": "Aadhaar",  
+  "id_proof_number": "123456789101",
   "hashed_password": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5",
-  "specialization": "Electrician"
+  "service_category": "Electrical Services"
 }
 
+### Sample TID, update the TID received on response here
+
+@TID=33d9a4f4-e084-462a-9f99-a720c3b0e8b7
+
 ### Get technician by TID
-GET http://localhost:{{port}}/technicians/1
+GET http://localhost:{{port}}/technicians/{{TID}}
 
 ### Get Technician by Email
 GET http://localhost:{{port}}/technicians?email=jane.doe@example.com
 
 ### Update Technician by TID
-PUT http://localhost:{{port}}/technicians/1
+PUT http://localhost:{{port}}/technicians/{{TID}} 
 Content-Type: application/json
 
 {
-  "specialization": "Plumber" 
+  "service_category": "Plumbing Services",
+  "is_available": true
 }
 
 ### Delete Technician by TID
-DELETE http://localhost:{{port}}/technicians/1
+DELETE http://localhost:{{port}}/technicians/{{TID}} 
 
 ### Get Available Technicians (Example)
-GET http://localhost:{{port}}/technicians/available?specialization=Electrician&longitude=77.5946&latitude=12.9716
+GET http://localhost:{{port}}/technicians/available?service_category=Plumbing%20Services&longitude=77.5946&latitude=12.9716

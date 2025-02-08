@@ -1,3 +1,4 @@
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 
@@ -24,7 +25,7 @@ class UserUpdate(BaseModel):
 
 
 class User(BaseModel):
-    uid: int
+    uid: UUID
     email: EmailStr
     phone: str
     name: str

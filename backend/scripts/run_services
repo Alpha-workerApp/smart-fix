@@ -49,6 +49,8 @@ def process_service_arguments(
     services_to_run: List[str] = []
     hydra_configs: Optional[List[str]] = None
 
+    available_services = get_available_services()
+
     if len(args.services) == 1 and args.services[0] == "all":
         services_to_run = available_services
     elif len(args.services) > 1 and "all" in args.services:
@@ -58,8 +60,6 @@ def process_service_arguments(
         exit(1)
     else:
         services_to_run = args.services
-
-    available_services = get_available_services()
 
     for service in services_to_run:
         if service not in available_services:
