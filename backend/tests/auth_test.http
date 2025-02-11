@@ -2,7 +2,7 @@
 @port=8002
 @hashed_password="95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5"
 
-### User Registration
+### User Registration [hashed_password = sha256_hash("secretpassword")]
 POST http://127.0.0.1:{{port}}/register
 Content-Type: application/json
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 
 ###
 
-### Technician Registration
+### Technician Registration [hashed_password = sha256_hash("secretpassword")]
 POST http://127.0.0.1:{{port}}/technician_register
 Content-Type: application/json
 

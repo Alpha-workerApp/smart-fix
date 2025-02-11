@@ -94,10 +94,10 @@ def get_user_by_email():
 @app.route("/users/auth", methods=["GET"])
 def get_hashed_password_by_email():
     """
-    Retrieves a hashed_password by email address.
+    Retrieves the hashed_password by email address.
 
     Expects:
-      - GET request to /users
+      - GET request to /users/auth
       - Query parameter 'email': The email address of the user to retrieve.
 
     Returns:

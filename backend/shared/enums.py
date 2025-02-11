@@ -2,12 +2,20 @@ import enum
 
 
 class IDProofType(enum.Enum):
+    """
+    Enumeration of supported identity proof types.
+    """
+
     AADHAAR = "Aadhaar"
     PAN = "PAN"
     VOTER_ID = "Voter ID"
 
 
 class ServiceCategory(enum.Enum):
+    """
+    Enumeration of available service categories.
+    """
+
     ELECTRICAL_SERVICES = "Electrical Services"
     PLUMBING_SERVICES = "Plumbing Services"
     CARPENTRY_SERVICES = "Carpentry Services"

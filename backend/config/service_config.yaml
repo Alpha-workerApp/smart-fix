@@ -1,0 +1,11 @@
+service:
+    server:
+        host: "localhost"
+        port: 8003
+        debug: True
+    logger:
+        name: "SERVICE"
+        level: "INFO"
+        enable_console_logging: True
+        enable_file_logging: True
+        log_dir: "logs/service_logs"

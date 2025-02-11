@@ -6,8 +6,11 @@
 -   Add the following environment variables in it (Copy and paste the following)
 
 ```sh
-SECRET_KEY=9edb76cc-4bf6-42a1-8837-1e964e57a96d
+SECRET_KEY=<secret key>
+BACKEND_DIR=<Absoulte Path to smart-fix\backend>
 ```
+
+`SECRET_KEY=9edb76cc-4bf6-42a1-8837-1e964e57a96d`
 
 ### Run the Services Individually
 
@@ -41,6 +44,10 @@ $ python .\scripts\run_services user technician --config technician.server.port=
 $ python .\scripts\run_services -h
 
 ```
+
+### Werkzeug error with service service
+
+https://stackoverflow.com/a/61729817
 
 ## Setup the environment for backend
 

@@ -77,7 +77,9 @@ class TechnicianService:
             self.logger.warning("Technician not found for update: %s", TID)
             return None
 
-        for field, value in update_data.model_dump(exclude_unset=True).items():
+        for field, value in update_data.model_dump(
+            exclude_unset=True, exclude_none=True
+        ).items():
             setattr(technician, field, value)
 
         self.db.commit()

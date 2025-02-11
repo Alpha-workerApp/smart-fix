@@ -72,7 +72,9 @@ class UserService:
             self.logger.warning("User not found for update: %s", uid)
             return None
 
-        for field, value in update_data.model_dump(exclude_unset=True).items():
+        for field, value in update_data.model_dump(
+            exclude_unset=True, exclude_none=True
+        ).items():
             setattr(user, field, value)
 
         self.db.commit()
