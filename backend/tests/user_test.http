@@ -14,13 +14,16 @@ Content-Type: application/json
 }
 
 ### Get user by UID
-GET http://localhost:{{port}}/users/1
+### This uid is received on the create user response
+@uid=83075689-9319-419b-a60c-9f9235960189
+
+GET http://localhost:{{port}}/users/{{uid}}
 
 ### Get User by Email
 GET http://localhost:{{port}}/users?email=john.doe@example.com
 
 ### Update User by UID
-PUT http://localhost:{{port}}/users/1
+PUT http://localhost:{{port}}/users/{{uid}}
 Content-Type: application/json
 
 {
@@ -28,4 +31,4 @@ Content-Type: application/json
 }
 
 ### Delete User by UID
-DELETE http://localhost:{{port}}/users/1
+DELETE http://localhost:{{port}}/users/{{uid}}

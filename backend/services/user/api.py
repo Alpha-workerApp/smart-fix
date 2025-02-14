@@ -1,3 +1,4 @@
+from uuid import UUID
 from flask import Flask, request, jsonify
 from omegaconf import DictConfig
 from dotenv import load_dotenv
@@ -57,7 +58,12 @@ def get_user(uid: str):
 
     logger.info(f"Received {request.method} request to /users/{uid}")
 
-    user: User = user_service.get_user(uid)
+    try:
+        uid_uuid = UUID(uid)
+    except ValueError:
+        return jsonify({"error": "Invalid user ID"}), 400
+
+    user: User = user_service.get_user(uid_uuid)
     if user:
         return jsonify(user.to_dict()), 200
     else:

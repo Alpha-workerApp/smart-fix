@@ -1,11 +1,13 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify
 from omegaconf import DictConfig
 from dotenv import load_dotenv
 from os import environ
 
+import requests
+
 from services.auth.services import AuthService
 from shared.middlewares import user_token_required, technician_token_required
-from shared.utils import get_logger, with_hydra_config
+from shared.utils import get_logger, with_hydra_config, get_device_ip
 
 load_dotenv()
 
@@ -102,32 +104,44 @@ def technician_protected_route(tid):
 
 @app.route("/register", methods=["POST"])
 def user_register():
-    """
-    Redirects user registration requests to the User service.
+    """Handles user registration requests, forwarding them to the User service.
 
     Expects:
-      - POST request to /register
+        - POST request to /register
+        - JSON request body with user registration data.
 
     Returns:
-      - 307 Temporary Redirect: Redirects to the User service's registration endpoint.
+        - JSON response from the User service, including status code.
+        - 500 status code with error message if request fails.
     """
     logger.info(f"Received {request.method} request to /register")
-    return redirect(user_api_url, code=307)
+    try:
+        response = requests.post(user_api_url, json=request.get_json())
+        return jsonify(response.json()), response.status_code
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error forwarding registration request: {e}")
+        return jsonify({"message": "Error registering user"}), 500
 
 
 @app.route("/technician_register", methods=["POST"])
 def technician_register():
-    """
-    Redirects technician registration requests to the Technician service.
+    """Handles technician registration requests, forwarding them to the Technician service.
 
     Expects:
-      - POST request to /technician_register
+        - POST request to /technician_register
+        - JSON request body with technician registration data.
 
     Returns:
-      - 307 Temporary Redirect: Redirects to the Technician service's registration endpoint.
+        - JSON response from the Technician service, including status code.
+        - 500 status code with error message if request fails.
     """
     logger.info(f"Received {request.method} request to /technician_register")
-    return redirect(technician_api_url, code=307)
+    try:
+        response = requests.post(technician_api_url, json=request.get_json())
+        return jsonify(response.json()), response.status_code
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error forwarding technician registration request: {e}")
+        return jsonify({"message": "Error registering technician"}), 500
 
 
 @with_hydra_config
@@ -136,8 +150,10 @@ def main(cfg: DictConfig):
 
     logger.info("Initializing Auth service")
 
-    user_api_url = f"http://localhost:{cfg.user.server.port}/users"
-    technician_api_url = f"http://localhost:{cfg.technician.server.port}/technicians"
+    ip_addr = get_device_ip()
+
+    user_api_url = f"http://{ip_addr}:{cfg.user.server.port}/users"
+    technician_api_url = f"http://{ip_addr}:{cfg.technician.server.port}/technicians"
 
     auth_service = AuthService(
         user_api_url, technician_api_url, environ.get("SECRET_KEY")

@@ -2,7 +2,7 @@ import os
 import uuid
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from typing import List, Optional
+from typing import List
 from werkzeug.datastructures import FileStorage
 
 from services.service.models import Service, Base

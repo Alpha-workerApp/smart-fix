@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from socket import gethostname, gethostbyname
 
 from hydra import compose, initialize
 from omegaconf import DictConfig, OmegaConf
@@ -72,3 +73,8 @@ def get_logger(cfg: DictConfig, service_name: str):
             logger.addHandler(file_handler)
 
     return logger
+
+
+def get_device_ip():
+    """Fetches the IP address of this device. Used to redirect the request fro one service to another"""
+    return gethostbyname(gethostname())
