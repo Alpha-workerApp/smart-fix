@@ -1,150 +1,250 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify
+from uuid import UUID
 from omegaconf import DictConfig
 from dotenv import load_dotenv
-from os import environ
 
-from services.auth.services import AuthService
-from shared.middlewares import user_token_required, technician_token_required
-from shared.utils import get_logger, with_hydra_config
+from services.technician.services import TechnicianService
+from services.technician.schemas import TechnicianCreate, TechnicianUpdate
+from services.technician.models import Technician
+from shared.utils import with_hydra_config, get_logger
 
 load_dotenv()
 
 app = Flask(__name__)
-logger = get_logger("auth")
-
-auth_service: AuthService
-user_api_url: str
-technician_api_url: str
+logger = get_logger("technician")
+technician_service: TechnicianService
 
 
-@app.route("/login", methods=["POST"])
-def user_login():
+@app.route("/technicians", methods=["POST"])
+def create_technician():
     """
-    Handles user login requests.
+    Creates a new technician.
 
     Expects:
-      - POST request to /login
-      - JSON request body with 'email' and 'hashed_password' fields.
+      - POST request to /technicians
+      - JSON request body with 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'service_category' and 'hashed_password' fields.
 
     Returns:
-      - 200 OK: JSON response with the access token.
-      - 401 Unauthorized: If login fails.
+      - 201 Created: JSON response with the created technician data.
+      - 409 Conflict: If technician creation fails.
     """
-    logger.info(f"Received {request.method} request to /login")
-    data = request.get_json()
+
+    logger.info(f"Received {request.method} request to /technicians")
+
     try:
-        token = auth_service.user_login(data.get("email"), data.get("hashed_password"))
-        return jsonify({"token": token}), 200
-    except Exception as e:
-        logger.error(f"User login error: {e}")
-        return jsonify({"message": str(e)}), 401
-
-
-@app.route("/technician_login", methods=["POST"])
-def technician_login():
-    """
-    Handles technician login requests.
-
-    Expects:
-      - POST request to /technician_login
-      - JSON request body with 'email' and 'hashed_password' fields.
-
-    Returns:
-      - 200 OK: JSON response with the access token.
-      - 401 Unauthorized: If login fails.
-    """
-    logger.info(f"Received {request.method} request to /technician_login")
-    data = request.get_json()
-    try:
-        token = auth_service.technician_login(
-            data.get("email"), data.get("hashed_password")
+        technician_data = TechnicianCreate(**request.get_json())
+        new_technician: Technician = technician_service.register_technician(
+            technician_data
         )
-        return jsonify({"token": token}), 200
+
+        return jsonify(new_technician.to_dict()), 201
     except Exception as e:
-        logger.error(f"Technician login error: {e}")
-        return jsonify({"message": str(e)}), 401
+        logger.error(f"Error in Registering technician: {str(e)}")
+        return jsonify({"error": type(e).__name__}), 409
 
 
-@app.route("/protected")
-@user_token_required
-def user_protected_route(uid):
+@app.route("/technicians/<tid>", methods=["GET"])
+def get_technician(tid: str):
     """
-    Protected route for authenticated users.
+    Retrieves a specific technician by ID.
+
+    Args:
+      - tid: The ID of the technician to retrieve.
 
     Expects:
-      - Valid user JWT token in the request headers.
+      - GET request to /technicians/<tid>
 
     Returns:
-      - 200 OK: JSON response with a success message.
+      - 200 OK: JSON response with the technician data.
+      - 404 Not Found: If the technician is not found.
     """
-    logger.info(f"Received {request.method} request to /protected")
-    return jsonify({"message": f"This is a protected route. Hello, {uid}!"}), 200
+
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
+
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
+
+    technician: Technician = technician_service.get_technician(tid_uuid)
+    if technician:
+        return jsonify(technician.to_dict()), 200
+    else:
+        return jsonify({"error": "Technician not found"}), 404
 
 
-@app.route("/technician_protected")
-@technician_token_required
-def technician_protected_route(tid):
+@app.route("/technicians", methods=["GET"])
+def get_technician_by_email():
     """
-    Protected route for authenticated technicians.
+    Retrieves a technician by email address.
 
     Expects:
-      - Valid technician JWT token in the request headers.
+      - GET request to /technicians
+      - Query parameter 'email': The email address of the technician to retrieve.
 
     Returns:
-      - 200 OK: JSON response with a success message.
+      - 200 OK: JSON response with the technician data.
+      - 404 Not Found: If the technician is not found.
     """
-    logger.info(f"Received {request.method} request to /technician_protected")
-    return (
-        jsonify({"message": f"This is a protected route. Hello, {tid}!"}),
-        200,
+
+    logger.info(
+        f"Received {request.method} request to /technicians?email={request.args.get('email')}"
     )
 
+    email: str = request.args.get("email")
+    technician: Technician = technician_service.get_technician_by_email(email)
 
-@app.route("/register", methods=["POST"])
-def user_register():
+    if technician:
+        return jsonify(technician.to_dict()), 200
+    else:
+        return jsonify({"error": "Technician not found"}), 404
+
+
+@app.route("/technicians/auth", methods=["GET"])
+def get_hashed_password_by_email():
     """
-    Redirects user registration requests to the User service.
+    Retrieves a hashed password by email address.
 
     Expects:
-      - POST request to /register
+      - GET request to /technicians
+      - Query parameter 'email': The email address of the technician to retrieve.
 
     Returns:
-      - 307 Temporary Redirect: Redirects to the User service's registration endpoint.
+      - 200 OK: JSON response with the hashed password.
+      - 404 Not Found: If the technician is not found.
     """
-    logger.info(f"Received {request.method} request to /register")
-    return redirect(user_api_url, code=307)
+
+    logger.info(
+        f"Received {request.method} request to /technicians/auth?email={request.args.get('email')}"
+    )
+
+    email: str = request.args.get("email")
+    technician: Technician = technician_service.get_technician_by_email(email)
+
+    if technician:
+        return jsonify({"hashed_password": technician.hashed_password}), 200
+    else:
+        return jsonify({"error": "Technician not found"}), 404
 
 
-@app.route("/technician_register", methods=["POST"])
-def technician_register():
+@app.route("/technicians/<tid>", methods=["PUT"])
+def update_technician(tid: str):
     """
-    Redirects technician registration requests to the Technician service.
+    Updates an existing technician.
+
+    Args:
+      - tid: The ID of the technician to update.
 
     Expects:
-      - POST request to /technician_register
+      - PUT request to /technicians/<tid>
+      - JSON request body with at least any one of these fields 'name', 'email', 'phone', 'id_proof_type', 'id_proof_number', 'service_category'.
 
     Returns:
-      - 307 Temporary Redirect: Redirects to the Technician service's registration endpoint.
+      - 200 OK: JSON response with the updated technician data.
+      - 404 Not Found: If the technician is not found or update fails.
+      - 409 Conflict: If update fails due to a conflict.
     """
-    logger.info(f"Received {request.method} request to /technician_register")
-    return redirect(technician_api_url, code=307)
+
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
+
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
+
+    try:
+        update_data = TechnicianUpdate(**request.get_json())
+        updated_technician: Technician = technician_service.update_technician(
+            tid_uuid, update_data
+        )
+        if updated_technician:
+            return jsonify(updated_technician.to_dict()), 200
+        else:
+            return jsonify({"error": "Technician not found or update failed"}), 404
+
+    except Exception as e:
+        logger.error(f"Error updating technician: {str(e)}")
+        return jsonify({"error": type(e).__name__}), 409
+
+
+@app.route("/technicians/<tid>", methods=["DELETE"])
+def delete_technician(tid: str):
+    """
+    Deletes a technician.
+
+    Args:
+      - tid: The ID of the technician to delete.
+
+    Expects:
+      - DELETE request to /technicians/<tid>
+
+    Returns:
+      - 200 OK: JSON response with a success message.
+      - 404 Not Found: If the technician is not found.
+    """
+
+    logger.info(f"Received {request.method} request to /technicians/{tid}")
+
+    try:
+        tid_uuid = UUID(tid)
+    except ValueError:
+        return jsonify({"error": "Invalid TID format"}), 400
+
+    technician: Technician = technician_service.delete_technician(tid_uuid)
+
+    if technician:
+        return jsonify({"message": "Technician deleted successfully"}), 200
+    else:
+        return jsonify({"error": "Technician not found"}), 404
+
+
+@app.route("/technicians/available", methods=["GET"])
+def get_available_technicians():
+    """
+    Gets available technicians based on service_category, longitude, and latitude.
+
+    Expects:
+      - GET request to /technicians/available
+      - Query parameters:
+        - 'service_category': The service_category of the technicians to retrieve.
+        - 'longitude': The longitude of the location.
+        - 'latitude': The latitude of the location.
+
+    Returns:
+      - 200 OK: JSON response with a list of available technician data.
+      - 400 Bad Request: If any of the required query parameters are missing.
+    """
+
+    logger.info(f"Received {request.method} request to /technicians/available")
+
+    service_category = request.args.get("service_category")
+    longitude = request.args.get("longitude")
+    latitude = request.args.get("latitude")
+
+    if not service_category or not longitude or not latitude:
+        return jsonify({"error": "Missing required query parameters"}), 400
+
+    try:
+        longitude = float(longitude)
+        latitude = float(latitude)
+    except ValueError:
+        return jsonify({"error": "Invalid longitude or latitude values"}), 400
+
+    available_technicians = technician_service.get_available_technicians(
+        service_category, longitude, latitude
+    )
+    return jsonify([tech.to_dict() for tech in available_technicians]), 200
 
 
 @with_hydra_config
 def main(cfg: DictConfig):
-    global auth_service, user_api_url, technician_api_url
+    global technician_service
 
-    logger.info("Initializing Auth service")
-
-    user_api_url = f"http://localhost:{cfg.user.server.port}/users"
-    technician_api_url = f"http://localhost:{cfg.technician.server.port}/technicians"
-
-    auth_service = AuthService(
-        user_api_url, technician_api_url, environ.get("SECRET_KEY")
-    )
+    logger.info("Initializing Technician service")
+    technician_service = TechnicianService(cfg.database.url)
 
     logger.info("Starting Flask server...")
-    app.run(**cfg.auth.server)
+    app.run(**cfg.technician.server)
 
 
 if __name__ == "__main__":
