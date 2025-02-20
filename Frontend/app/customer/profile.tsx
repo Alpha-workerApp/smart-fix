@@ -78,7 +78,7 @@ const ProfileCustomer = () => {
         <View className="flex-row justify-between items-center w-full px-4">
           <Text className="pt-10 text-4xl font-nunito-bold text-black">You</Text>
           <TouchableOpacity onPress={handleLogout}>
-            <Image source={require("../../assets/icons/logout-icon.png")} className="w-8 h-8 mt-11" />
+            <Image source={require("../../assets/icons/logout-icon.png")} className="w-8 h-8 mt-7 mr-2" />
           </TouchableOpacity>
         </View>
 

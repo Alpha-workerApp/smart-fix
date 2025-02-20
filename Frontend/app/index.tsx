@@ -57,7 +57,7 @@ const Index = () => {
       if (selectedValue === "customer") {
         router.replace("/auth/login_user");
       } else if (selectedValue === "worker") {
-        router.replace("/auth/login_tech");
+        router.replace("/auth/login_user");
       }
     } catch (error) {
       console.error("Error storing user role: ", error);

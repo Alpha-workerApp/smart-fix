@@ -68,6 +68,7 @@ const Register = () => {
       className="h-screen flex justify-center items-center gap-4 px-3"
     >
       <Text className="text-3xl font-nunito-bold">Register Yourself</Text>
+      <Text className="text-base font-nunito-bold">Role: user</Text>
       <Text className="font-nunito-medium text-lg">Enter your details</Text>
       
       <TextInput

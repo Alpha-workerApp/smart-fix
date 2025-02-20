@@ -1,124 +1,155 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  Button,
+  SafeAreaView,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
+import { useNavigation } from "@react-navigation/native";
+import { domain } from "../customStyles/custom";
+import { router } from "expo-router";
+import Toast from "react-native-toast-message";
+
+type FormDataType = {
+  name: string;
+  email: string;
+  phone: string;
+  hashed_password: string;
+  id_proof_type: string;
+  id_proof_number: string;
+  service_category: string;
+};
 
 const Register = () => {
-  const [isCustomerChecked, setisCustomerChecked] = useState(false);
-  const [isWorkerChecked, setWorkerChecked] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
+  const navigation = useNavigation();
+  const [formData, setFormData] = useState<FormDataType>({
+    name: "",
+    email: "",
+    phone: "",
+    hashed_password: "",
+    id_proof_type: "",
+    id_proof_number: "",
+    service_category: "",
+  });
+  const showToast = useCallback(
+    (type: "success" | "error" | "warning", msg: string) => {
+      Toast.show({ type, text1: msg });
+    },
+    []
+  );
+  const [loading, setLoading] = useState(false);
 
-  // Handle checkbox logic to ensure only one is checked at a time
-  const handleCustomerCheck = () => {
-    setisCustomerChecked(true);
-    setWorkerChecked(false);
+  const handleInputChange = (field: keyof FormDataType, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleWorkerCheck = () => {
-    setWorkerChecked(true);
-    setisCustomerChecked(false);
+  const handleRegister = async () => {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.hashed_password ||
+      !formData.id_proof_type ||
+      !formData.id_proof_number ||
+      !formData.service_category
+    ) {
+      Alert.alert("Error", "Please fill all fields before registering.");
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`http://${domain}:8002/technician_register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        router.replace("/auth/login_user");
+        showToast("success","Registration successfull")
+      } else {
+        Alert.alert("Error", result.message || "Registration failed!");
+      }
+    } catch (error) {
+      showToast("error","Network request failed!")
+      console.error("Registration Error:", error);
+    }
+    setLoading(false);
   };
 
   return (
-    <View>
-      <ImageBackground
-        source={require("../../assets/images/Ui-background.png")}
-        className="h-screen flex justify-center items-center gap-4"
+    <SafeAreaView className="flex-1">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
       >
-        <Text className=" text-3xl font-nunito-bold">
-          Register Yourself
-        </Text>
-        <Text className=" font-nunito text-lg">
-          Enter your details
-        </Text>
-        <TextInput
-          className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-          placeholder="Enter the first name"
-        />
-        <TextInput
-          className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-          placeholder="Enter the last name"
-        />
-        <TextInput
-          className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-          placeholder="Enter the email"
-        />
-        <TextInput
-          className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-          placeholder="Enter the password"
-        />
-
-        <Text className=" mt-4 text-lg font-nunito">Type</Text>
-        <View className="flex flex-row gap-5">
-          <View className="flex flex-row items-center gap-1 justify-center mt-4">
-            <TouchableOpacity
-              className={`w-6 h-6 ${
-                isCustomerChecked ? "bg-blue-500" : "bg-gray-300"
-              } rounded-lg flex items-center justify-center`}
-              onPress={handleCustomerCheck}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ImageBackground
+              source={require("../../assets/images/Ui-background.png")}
+              className="h-full flex justify-center items-center gap-2 p-5"
             >
-              {isCustomerChecked && (
-                <MaterialIcons name="check" size={18} color="white" />
-              )}
-            </TouchableOpacity>
-            <Text className="ml-2 text-lg ">Customer</Text>
-          </View>
-
-          <View className="flex flex-row items-center gap-1 justify-center mt-4">
-            <TouchableOpacity
-              className={`w-6 h-6 ${
-                isWorkerChecked ? "bg-blue-500" : "bg-gray-300"
-              } rounded-lg flex items-center justify-center`}
-              onPress={handleWorkerCheck}
-            >
-              {isWorkerChecked && (
-                <MaterialIcons name="check" size={18} color="white" />
-              )}
-            </TouchableOpacity>
-            <Text className="ml-2 text-lg ">Professional</Text>
-          </View>
-        </View>
-
-        {/* Dropdown for Professional */}
-        {isWorkerChecked && (
-          <View className="my-5">
-            <RNPickerSelect
-              onValueChange={(value) => setSelectedService(value)}
-              items={[
-                { label: "Plumbing", value: "plumbing" },
-                { label: "Electrician", value: "electrician" },
-                { label: "Carpentry", value: "carpentry" },
-                { label: "Painting", value: "painting" },
-              ]}
-              style={{
-                inputIOS: {
-                  backgroundColor: "#f4f4f4",
-                  borderRadius: 8,
-                  width: 320,
-                },
-                inputAndroid: {
-                  backgroundColor: "#f4f4f4",
-                  borderRadius: 8,
-                  width: 320,
-                },
-              }}
-              placeholder={{ label: "Select a Service", value: null }}
-            />
-
-            <TouchableOpacity className="px-[135px] my-5 py-4 bg-[#1e1e4a] rounded-lg">
-              <Text className="text-white font-nunito-semibold">Register</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ImageBackground>
-    </View>
+              <Text className="text-3xl font-nunito-bold">Register Yourself</Text>
+              <Text className="font-nunito text-lg">Enter your details</Text>
+              
+              <TextInput
+                className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
+                placeholder="Enter full name"
+                value={formData.name}
+                onChangeText={(text) => handleInputChange("name", text)}
+              />
+              <TextInput
+                className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
+                placeholder="Enter email"
+                value={formData.email}
+                onChangeText={(text) => handleInputChange("email", text)}
+              />
+              <TextInput
+                className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
+                placeholder="Enter phone number"
+                value={formData.phone}
+                keyboardType="numeric"
+                onChangeText={(text) => handleInputChange("phone", text)}
+              />
+              <TextInput
+                className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
+                placeholder="Enter password"
+                secureTextEntry
+                value={formData.hashed_password}
+                onChangeText={(text) => handleInputChange("hashed_password", text)}
+              />
+              
+              <TouchableOpacity
+                className="px-[135px] my-5 py-4 bg-black rounded-lg flex flex-row justify-center items-center"
+                onPress={handleRegister}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text className="text-white font-nunito-semibold">Register</Text>
+                )}
+              </TouchableOpacity>
+            </ImageBackground>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

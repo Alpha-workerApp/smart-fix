@@ -81,56 +81,6 @@ const SignIn = () => {
     }
   };
 
-  // const handleManualLogin = async() =>{
-  //   if (!email || !password) {
-  //     setStatus("Email and password are required");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Explicitly define the request payload
-  //     const requestBody = {
-  //       "email": String(email).trim(),  // Trim whitespace and ensure string format
-  //       "hashed_password": String(password).trim(),  // Ensure password is a string
-  //     };
-  
-  //     console.log("Request Payload Before Sending:", JSON.stringify(requestBody)); // Debugging log
-  
-  //     const response = await fetch("http://192.168.249.89:8002/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Accept": "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(requestBody),
-  //     });
-  
-  //     const responseText = await response.text();
-  //     console.log("Raw Response:", responseText);
-  
-  //     // Ensure response is valid JSON
-  //     let responseData;
-  //     try {
-  //       responseData = JSON.parse(responseText);
-  //     } catch (parseError) {
-  //       console.error("Failed to parse JSON response:", parseError);
-  //       setStatus("Invalid server response");
-  //       return;
-  //     }
-  
-  //     if (response.ok) {
-  //       console.log("Login successful:", responseData);
-  //       setStatus("Login successful");
-  //     } else {
-  //       console.error("Login failed:", responseData);
-  //       setStatus("Login failed");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during login:", error);
-  //     setStatus("An error occurred during login");
-  //   }
-  // }
-
 
   const handleManualLogin = async () => {
     if (!email || !password) {
