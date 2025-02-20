@@ -115,7 +115,6 @@ const Index = () => {
 
   return (
     <>
-      {/* When the sidebar is open, render a full-screen TouchableOpacity that closes it on tap */}
       {isSidebarOpen && (
         <TouchableOpacity
           activeOpacity={1}

@@ -124,6 +124,7 @@ const SignIn = () => {
       const data = JSON.parse(responseText);
       if (data.token) {
         await AsyncStorage.setItem("jwtToken", data.token);
+        await AsyncStorage.setItem("registerEmail", email);
         showToast("success", "Login successful");
         if (userType === "customer") {
           router.replace("/customer");
