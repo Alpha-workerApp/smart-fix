@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
 import Dashboard from "../components/WorkerComponents/Dashboard";
+import UserProfileStack from "../components/WorkerComponents/UserProfileStack";
 
 // Updated interface to match server response
 interface Technician {
@@ -144,9 +145,14 @@ const Index = () => {
         </TouchableOpacity>
       </TouchableOpacity>
 
-      <View>
+      <View className="py-3">
         <Dashboard/>
       </View>
+
+      <View>
+        <UserProfileStack/>
+      </View>
+      
     </SafeAreaView>
   );
 };

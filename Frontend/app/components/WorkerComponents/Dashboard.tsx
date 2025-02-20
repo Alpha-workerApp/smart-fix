@@ -6,9 +6,9 @@ const Dashboard = () => {
   const [isToggled, setIsToggled] = useState(false);
 
   return (
-    <View>
+    <View className="">
       <View
-        className="h-[61%] m-5 px-4 py-4 rounded-2xl bg-white"
+        className="m-5 px-4 py-4 rounded-2xl bg-white"
         style={{
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
@@ -32,7 +32,7 @@ const Dashboard = () => {
           </TouchableOpacity>
         </View>
 
-        <View className="flex flex-row gap-6 mt-6">
+        <View className="flex flex-row gap-6 mt-6 mb-1">
             <View className="ml-3">
             <CircularProgress progress={50}/>
             </View>
