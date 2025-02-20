@@ -13,6 +13,7 @@ import { domain } from "../customStyles/custom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Asset } from "expo-asset";
 import { router } from "expo-router";
+import Dashboard from "../components/WorkerComponents/Dashboard";
 
 // Updated interface to match server response
 interface Technician {
@@ -142,6 +143,10 @@ const Index = () => {
           <Image source={require("../../assets/icons/right-arrow-icon.png")} className="size-6" />
         </TouchableOpacity>
       </TouchableOpacity>
+
+      <View>
+        <Dashboard/>
+      </View>
     </SafeAreaView>
   );
 };

@@ -22,53 +22,52 @@ const Chat = () => {
 
   const handleSend = async () => {
     if (query.trim()) {
-      const userMessage = { id: Date.now(), text: query, sender: "user" };
-      setMessages((prev) => [...prev, userMessage]);
-      setQuery("");
-      setLoading(true); // Set loading state
+        const userMessage = { id: Date.now(), text: query, sender: "user" };
+        setMessages((prev) => [...prev, userMessage]);
+        setQuery("");
+        setLoading(true);
 
-      // Delay before showing "Typing..." message
-      setTimeout(() => {
-        const typingMessage = { id: Date.now() + 1, text: "Typing...", sender: "bot" };
-        setMessages((prevMessages) => [...prevMessages, typingMessage]);
-        
-        // Auto-scroll after "Typing..." appears
+        // Typing effect
         setTimeout(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
+            const typingMessage = { id: Date.now() + 1, text: "Typing...", sender: "bot" };
+            setMessages((prev) => [...prev, typingMessage]);
+
+            setTimeout(() => {
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+            }, 100);
+        }, 1000);
+
+        try {
+            // Correct API key
+            const response = await axios.post(API_URL, { user_input: query });
+
+            setMessages((prevMessages) =>
+                prevMessages.filter(msg => msg.text !== "Typing...")
+            );
+
+            const botMessage = {
+                id: Date.now() + 2,
+                text: response.data.response[0] || "I'm not sure how to respond.",
+                sender: "bot",
+            };
+
+            setMessages((prevMessages) => [...prevMessages, botMessage]);
+        } catch (error) {
+            console.error("Error:", error);
+            setMessages((prevMessages) => [
+                ...prevMessages.filter(msg => msg.text !== "Typing..."),
+                { id: Date.now() + 3, text: "Error connecting to chatbot.", sender: "bot" },
+            ]);
+        } finally {
+            setLoading(false);
+        }
+
+        setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
         }, 100);
-      }, 1000); // 1-second delay
-
-      try {
-        // Send user message to Flask server
-        const response = await axios.post(API_URL, { user_input: query });
-
-        // Remove "Typing..." message
-        setMessages((prevMessages) => prevMessages.filter(msg => msg.text !== "Typing..."));
-
-        // Add bot response
-        const botMessage = {
-          id: Date.now() + 2,
-          text: response.data.response[0], // Extracting bot reply from response
-          sender: "bot",
-        };
-
-        setMessages((prevMessages) => [...prevMessages, botMessage]);
-      } catch (error) {
-        console.error("Error:", error);
-        setMessages((prevMessages) => [
-          ...prevMessages.filter(msg => msg.text !== "Typing..."), // Remove "Typing..."
-          { id: Date.now() + 3, text: "Error connecting to chatbot.", sender: "bot" },
-        ]);
-      } finally {
-        setLoading(false); // Reset loading state
-      }
-      
-      // Auto-scroll after bot response
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
     }
-  };
+};
+
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
