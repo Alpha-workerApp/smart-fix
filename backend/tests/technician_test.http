@@ -27,7 +27,7 @@ GET http://localhost:{{port}}/technicians/{{TID}}
 GET http://localhost:{{port}}/technicians?email=jane.doe@example.com
 
 ### Update Technician by TID
-PUT http://localhost:{{port}}/technicians/{{TID}} 
+PUT http://localhost:{{port}}/technicians/8e9b5843-99b8-4c31-acc6-1d18dc8f9510 
 Content-Type: application/json
 
 {
