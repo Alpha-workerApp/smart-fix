@@ -1,0 +1,11 @@
+service:
+    server:
+        host: "0.0.0.0"
+        port: 8004
+        debug: True
+    logger:
+        name: "BOOKING"
+        level: "INFO"
+        enable_console_logging: True
+        enable_file_logging: True
+        log_dir: "logs/booking_logs"

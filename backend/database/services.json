@@ -1,0 +1,1364 @@
+{
+	"services": [
+		{
+			"SID": 1,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Foam-jet AC service",
+			"details": {
+				"prices": {
+					"1 AC": "₹999",
+					"2 ACs": "₹1798 (₹899/AC) - 10% off",
+					"3 ACs": "₹2247 (₹749/AC) - 25% off",
+					"4 ACs": "₹2996 (₹749/AC) - 25% off",
+					"5 ACs": "₹3745 (₹749/AC) - 25% off",
+					"6 ACs": "₹4494 (₹749/AC) - 25% off"
+				},
+				"claims": [
+					"Free revisit within 10 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 2,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Lite AC service",
+			"details": {
+				"price": "₹799",
+				"claims": [
+					"Free revisit within 10 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 3,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "AC less/no cooling repair",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 30 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 4,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "AC power issue repair",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 30 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 5,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "AC noise/smell repair",
+			"details": {
+				"price": "₹499",
+				"claims": [
+					"Free revisit within 30 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 6,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "AC water leakage repair",
+			"details": {
+				"price": "₹599",
+				"claims": [
+					"Free revisit within 30 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 7,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "AC gas leak repair & refill",
+			"details": {
+				"price": "₹2500",
+				"claims": [
+					"Free revisit within 30 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 8,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Split AC installation",
+			"details": {
+				"price": "₹1999",
+				"claims": [
+					"Free revisit within 10 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 9,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Window AC installation",
+			"details": {
+				"price": "₹799",
+				"claims": [
+					"Free revisit within 10 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 10,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Split AC uninstallation",
+			"details": {
+				"price": "₹649"
+			}
+		},
+		{
+			"SID": 11,
+			"serviceCategory": "AC & HVAC Maintenance",
+			"serviceName": "Window AC uninstallation",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 12,
+			"serviceCategory": "Washing Machine Repair",
+			"serviceName": "Fully automatic check-up (top load)",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 13,
+			"serviceCategory": "Washing Machine Repair",
+			"serviceName": "Semi-automatic check-up",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 14,
+			"serviceCategory": "Washing Machine Repair",
+			"serviceName": "Fully automatic check-up (front load)",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 15,
+			"serviceCategory": "Washing Machine Repair",
+			"serviceName": "Washing machine installation",
+			"details": {
+				"price": "₹399",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 16,
+			"serviceCategory": "Washing Machine Repair",
+			"serviceName": "Washing machine uninstallation",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 17,
+			"serviceCategory": "Refrigerator Repair",
+			"serviceName": "Single door refrigerator check-up",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 18,
+			"serviceCategory": "Refrigerator Repair",
+			"serviceName": "Double door refrigerator check-up (non-inverter)",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 19,
+			"serviceCategory": "Refrigerator Repair",
+			"serviceName": "Double door refrigerator check-up (inverter)",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 20,
+			"serviceCategory": "Refrigerator Repair",
+			"serviceName": "Side-by-side door refrigerator check-up",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 180 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 21,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier check-up (not working)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 22,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier check-up (water leakage)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 23,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier check-up (low water flow)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 24,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier check-up (foul taste/odour)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 25,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier check-up (unknown issue)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 26,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier filter check-up",
+			"details": {
+				"price": "₹299",
+				"claims": [
+					"Free revisit within 365 days for any post-service issues.",
+					"One-click hassle-free claims",
+					"Cover up to ₹10,000 for any damage during the service"
+				]
+			}
+		},
+		{
+			"SID": 27,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier installation",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 28,
+			"serviceCategory": "Water Purifier Repair",
+			"serviceName": "Water purifier uninstallation",
+			"details": {
+				"price": "₹300"
+			}
+		},
+		{
+			"SID": 29,
+			"serviceCategory": "Microwave Repair",
+			"serviceName": "Microwave check-up (buttons not working)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 30,
+			"serviceCategory": "Microwave Repair",
+			"serviceName": "Microwave check-up (not working)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 31,
+			"serviceCategory": "Microwave Repair",
+			"serviceName": "Microwave check-up (noise issue)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 32,
+			"serviceCategory": "Microwave Repair",
+			"serviceName": "Microwave check-up (not heating)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 33,
+			"serviceCategory": "Microwave Repair",
+			"serviceName": "Microwave check-up (unknown issue)",
+			"details": {
+				"price": "₹299"
+			}
+		},
+		{
+			"SID": 34,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Intense bathroom cleaning",
+			"details": {
+				"price": "₹549",
+				"duration": "1hr 20 mins"
+			}
+		},
+		{
+			"SID": 35,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Classic bathroom cleaning",
+			"details": {
+				"price": "₹469",
+				"duration": "60 mins"
+			}
+		},
+		{
+			"SID": 36,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Move-in bathroom cleaning",
+			"details": {
+				"price": "₹599",
+				"duration": "1hr 30 mins"
+			}
+		},
+		{
+			"SID": 37,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Complete kitchen cleaning",
+			"details": {
+				"kitchen cleaning": "₹1549",
+				"with chimney": "₹2399",
+				"with appliance": "₹2399",
+				"with appliance & chimney": "₹2999"
+			}
+		},
+		{
+			"SID": 38,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Move-in kitchen cleaning",
+			"details": {
+				"empty kitchen": "₹1199",
+				"with appliance": "₹1899",
+				"chimney cleaning": "₹599",
+				"with appliance & chimney": "₹2499"
+			}
+		},
+		{
+			"SID": 39,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Fridge cleaning (single door)",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 40,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Fridge cleaning (double door)",
+			"details": {
+				"price": "₹549"
+			}
+		},
+		{
+			"SID": 41,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Ceiling fan cleaning",
+			"details": {
+				"price": "₹49",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 42,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Exhaust fan cleaning",
+			"details": {
+				"price": "₹89",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 43,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Kitchen sink cleaning",
+			"details": {
+				"price": "₹99",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 44,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Utensil removal & placing back",
+			"details": {
+				"price": "₹499",
+				"duration": "60 mins"
+			}
+		},
+		{
+			"SID": 45,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Gas stove cleaning",
+			"details": {
+				"price": "₹99",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 46,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Microwave cleaning",
+			"details": {
+				"price": "₹199",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 47,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Trolley & shelves cleaning",
+			"details": {
+				"price": "₹899",
+				"duration": "2hrs"
+			}
+		},
+		{
+			"SID": 48,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "Balcony cleaning",
+			"details": {
+				"price": "₹469",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 49,
+			"serviceCategory": "House Cleaning Services",
+			"serviceName": "2 ceiling fan cleaning",
+			"details": {
+				"price": "₹98",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 50,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Switchbox installation",
+			"details": {
+				"price": "₹239",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 51,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "AC switchbox installation",
+			"details": {
+				"price": "₹249",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 52,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Switchboard installation",
+			"details": {
+				"price": "₹169",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 53,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Smart switch installation",
+			"details": {
+				"price": "₹119",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 54,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Smart appliance controller",
+			"details": {
+				"price": "₹179",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 55,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Wi-Fi smart switch installation",
+			"details": {
+				"price": "₹179",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 56,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Switch/socket replacement",
+			"details": {
+				"price": "₹49",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 57,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Switchboard/switchbox repair",
+			"details": {
+				"price": "₹79",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 58,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Fan uninstallation",
+			"details": {
+				"price": "₹69",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 59,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Fan replacement",
+			"details": {
+				"price": "₹149",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 60,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Fan repair",
+			"details": {
+				"price": "₹109",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 61,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Fan regulator repair/replacement",
+			"details": {
+				"price": "₹49",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 62,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Ceiling fan installation",
+			"details": {
+				"price": "₹89"
+			}
+		},
+		{
+			"SID": 63,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Wall fan installation",
+			"details": {
+				"price": "₹89"
+			}
+		},
+		{
+			"SID": 64,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Exhaust fan installation",
+			"details": {
+				"price": "₹99"
+			}
+		},
+		{
+			"SID": 65,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Decorative ceiling fan installation",
+			"details": {
+				"price": "₹319"
+			}
+		},
+		{
+			"SID": 66,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Pigeon FAN-tastic ceiling fan installation",
+			"details": {
+				"regular": "₹250",
+				"decorative": "₹520",
+				"smart/BLDC": "₹340"
+			}
+		},
+		{
+			"SID": 67,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Bulb/tubelight holder installation",
+			"details": {
+				"price": "₹69",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 68,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "CFL to LED replacement",
+			"details": {
+				"price": "₹129",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 69,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Decorative lights installation (per 5m)",
+			"details": {
+				"price": "₹89",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 70,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Decorative lights uninstallation (per 20 m)",
+			"details": {
+				"price": "₹99",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 71,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Decorative lantern installation",
+			"details": {
+				"price": "₹99",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 72,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Chandelier installation",
+			"details": {
+				"price": "₹549",
+				"duration": "30 days"
+			}
+		},
+		{
+			"SID": 73,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Wall/ceiling light installation",
+			"details": {
+				"bulb/CFL/LED (upto 5)": "₹69",
+				"tubelight": "₹69",
+				"lantern": "₹99",
+				"ceiling": "₹129",
+				"wall": "₹99"
+			}
+		},
+		{
+			"SID": 74,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "New external wiring (per 5m)",
+			"details": {
+				"with casing": "₹209",
+				"without casing": "₹89"
+			}
+		},
+		{
+			"SID": 75,
+			"serviceCategory": "Electrical Services",
+			"service Name": "New internal wiring (per 5m)",
+			"details": {
+				"price": "₹159"
+			}
+		},
+		{
+			"SID": 76,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Doorbell installation",
+			"details": {
+				"price": "₹59"
+			}
+		},
+		{
+			"SID": 77,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Doorbell replacement",
+			"details": {
+				"price": "₹79"
+			}
+		},
+		{
+			"SID": 78,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Single-pole MCB installation",
+			"details": {
+				"price": "₹99"
+			}
+		},
+		{
+			"SID": 79,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Double-pole MCB installation",
+			"details": {
+				"price": "₹149"
+			}
+		},
+		{
+			"SID": 80,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "MCB/Fuse replacement",
+			"details": {
+				"price": "₹79"
+			}
+		},
+		{
+			"SID": 81,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Submeter installation",
+			"details": {
+				"price": "₹219"
+			}
+		},
+		{
+			"SID": 82,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "3-phase changeover switch installation",
+			"details": {
+				"price": "₹249"
+			}
+		},
+		{
+			"SID": 83,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter installation (single battery)",
+			"details": {
+				"price": "₹369"
+			}
+		},
+		{
+			"SID": 84,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter installation (double battery)",
+			"details": {
+				"price": "₹449"
+			}
+		},
+		{
+			"SID": 85,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Stabiliser installation",
+			"details": {
+				"price": "₹119"
+			}
+		},
+		{
+			"SID": 86,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter fuse replacement",
+			"details": {
+				"price": "₹99"
+			}
+		},
+		{
+			"SID": 87,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter servicing (single battery)",
+			"details": {
+				"price": "₹139"
+			}
+		},
+		{
+			"SID": 88,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter servicing (double battery)",
+			"details": {
+				"price": "₹309"
+			}
+		},
+		{
+			"SID": 89,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter repair (power back up issue)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 90,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter repair (noise issue)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 91,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter repair (not sure of the issue)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 92,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Inverter repair (overload error)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 93,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Geyser installation",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 94,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "TV installation (upto 48 in)",
+			"details": {
+				"price": "₹379"
+			}
+		},
+		{
+			"SID": 95,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "TV installation (48-55 in)",
+			"details": {
+				"price": "₹499"
+			}
+		},
+		{
+			"SID": 96,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "TV installation (55-70 in)",
+			"details": {
+				"price": "₹599"
+			}
+		},
+		{
+			"SID": 97,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "TV uninstallation",
+			"details": {
+				"price": "₹139"
+			}
+		},
+		{
+			"SID": 98,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "WiFi CCTV installation",
+			"details": {
+				"price": "₹229"
+			}
+		},
+		{
+			"SID": 99,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Room heater repair",
+			"details": {
+				"price": "₹219"
+			}
+		},
+		{
+			"SID": 100,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Karban airzone installation",
+			"details": {
+				"price": "₹549"
+			}
+		},
+		{
+			"SID": 101,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Karban airzone lite installation",
+			"details": {
+				"price": "₹399"
+			}
+		},
+		{
+			"SID": 102,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Video bell installation",
+			"details": {
+				"price": "₹549"
+			}
+		},
+		{
+			"SID": 103,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (not grinding without motor sound)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 104,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (burning smell/smoke)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 105,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (unknown issue)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 106,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (noise issue)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 107,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (not grinding with motor sound)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 108,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Mixer grinder repair (water leakage)",
+			"details": {
+				"price": "₹210"
+			}
+		},
+		{
+			"SID": 109,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "Home theater installation",
+			"details": {
+				"price": "₹239"
+			}
+		},
+		{
+			"SID": 110,
+			"serviceCategory": "Electrical Services",
+			"serviceName": "EV charger installation (2 wheeler)",
+			"details": {
+				"price": "₹750"
+			}
+		},
+		{
+			"SID": 111,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Bath accessory installation",
+			"details": {
+				"price": "₹69",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 112,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Shower installation",
+			"details": {
+				"price": "₹89"
+			}
+		},
+		{
+			"SID": 113,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Wash basin installation",
+			"details": {
+				"price": "₹349",
+				"duration": "45 mins"
+			}
+		},
+		{
+			"SID": 114,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Waste pipe replacement",
+			"details": {
+				"price": "₹89",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 115,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Sink drainage removal",
+			"details": {
+				"price": "₹119",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 116,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Bathroom tile grouting",
+			"details": {
+				"price": "₹1299",
+				"duration": "2 hrs"
+			}
+		},
+		{
+			"SID": 117,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Kitchen tile grouting",
+			"details": {
+				"price": "₹879",
+				"duration": "60 mins"
+			}
+		},
+		{
+			"SID": 118,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Shower filter installation",
+			"details": {
+				"price": "₹129",
+				"duration": "10 mins"
+			}
+		},
+		{
+			"SID": 119,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Washing machine filter installation",
+			"details": {
+				"price": "₹79",
+				"duration": "10 mins"
+			}
+		},
+		{
+			"SID": 120,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Drainage cover installation",
+			"details": {
+				"price": "₹99",
+				"duration": "15 mins"
+			}
+		},
+		{
+			"SID": 121,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Bathroom drainage removal",
+			"details": {
+				"price": "₹299",
+				"duration": "2 hrs"
+			}
+		},
+		{
+			"SID": 122,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Balcony drainage removal",
+			"details": {
+				"price": "₹189",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 123,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Toilet seat cover replacement",
+			"details": {
+				"price": "₹79",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 124,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Flush tank repair (external PVC)",
+			"details": {
+				"price": "₹99",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 125,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Flush tank repair (concealed)",
+			"details": {
+				"price": "₹169"
+			}
+		},
+		{
+			"SID": 126,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Flush tank repair (external ceramic)",
+			"details": {
+				"price": "₹199",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 127,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Western toilet repair (floor mounted)",
+			"details": {
+				"price": "₹569",
+				"duration": "1 hr 30 mins"
+			}
+		},
+		{
+			"SID": 128,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Toilet pot blockage removal",
+			"details": {
+				"price": "₹1099",
+				"duration": "2 hrs 10 mins"
+			}
+		},
+		{
+			"SID": 129,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Jet spray installation/repair",
+			"details": {
+				"price": "₹79",
+				"duration": "30 mins"
+			}
+		},
+		{
+			"SID": 130,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Western toilet replacement",
+			"details": {
+				"price": "₹1799"
+			}
+		},
+		{
+			"SID": 131,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Indian toilet installation",
+			"details": {
+				"price": "₹1499",
+				"duration": "2 hrs 30 mins"
+			}
+		},
+		{
+			"SID": 132,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Flush tank replacement",
+			"details": {
+				"price": "₹409",
+				"duration": "60 mins"
+			}
+		},
+		{
+			"SID": 133,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Western toilet installation",
+			"details": {
+				"price": "₹1599"
+			}
+		},
+		{
+			"SID": 134,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Tap repair",
+			"details": {
+				"price": "₹49",
+				"duration": "5 mins"
+			}
+		},
+		{
+			"SID": 135,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water mixer tap repair",
+			"details": {
+				"price": "₹179",
+				"duration": "25 mins"
+			}
+		},
+		{
+			"SID": 136,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Tap installation",
+			"details": {
+				"price": "₹49",
+				"duration": "5 mins"
+			}
+		},
+		{
+			"SID": 137,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water mixer installation",
+			"details": {
+				"price": "₹329"
+			}
+		},
+		{
+			"SID": 138,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water nozzle installation",
+			"details": {
+				"price": "₹69",
+				"duration": "10 mins"
+			}
+		},
+		{
+			"SID": 139,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Tap replacement",
+			"details": {
+				"price": "₹59",
+				"duration": "10 mins"
+			}
+		},
+		{
+			"SID": 140,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water tank repair",
+			"details": {
+				"water tank pipeline repair": {
+					"price": "₹309"
+				},
+				"water overflow repair": {
+					"price": "₹169"
+				}
+			}
+		},
+		{
+			"SID": 141,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Overhead water tank installation",
+			"details": {
+				"upto 500L": "₹499",
+				"500L-2000L": "₹1049"
+			}
+		},
+		{
+			"SID": 142,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water tank cleaning (loft placed)",
+			"details": {
+				"upto 1000L": "₹1099",
+				"1000L-2000L": "₹1299"
+			}
+		},
+		{
+			"SID": 143,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Overhead tank cleaning (open placed)",
+			"details": {
+				"upto 1000L": "₹799",
+				"1000L-2000L": "₹999"
+			}
+		},
+		{
+			"SID": 144,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Underground tank cleaning",
+			"details": {
+				"1499L": "₹1199",
+				"1500-2999L": "₹1499"
+			}
+		},
+		{
+			"SID": 145,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Pipeline leakage repair",
+			"details": {
+				"price": "₹199"
+			}
+		},
+		{
+			"SID": 146,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Water meter installation",
+			"details": {
+				"price": "₹299",
+				"duration": "60 mins"
+			}
+		},
+		{
+			"SID": 147,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Motor air cavity removal",
+			"details": {
+				"price": "₹99",
+				"duration": "1 hr 30 mins"
+			}
+		},
+		{
+			"SID": 148,
+			"serviceCategory": "Plumbing Services",
+			"serviceName": "Motor installation/replacement",
+			"details": {
+				"price": "₹349",
+				"duration": "60 mins"
+			}
+		}
+	]
+}
