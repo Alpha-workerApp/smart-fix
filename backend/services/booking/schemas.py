@@ -5,7 +5,7 @@ from typing import Optional
 
 
 class BookingCreate(BaseModel):
-    CID: UUID
+    UID: UUID
     TID: UUID
     SID: int
     booking_date: datetime
@@ -22,7 +22,7 @@ class BookingUpdate(BaseModel):
 
 class Booking(BaseModel):
     BID: UUID
-    CID: UUID
+    UID: UUID
     TID: UUID
     SID: int
     booking_date: datetime
