@@ -2,12 +2,11 @@ from flask import Flask, request, jsonify
 from uuid import UUID
 from omegaconf import DictConfig
 from dotenv import load_dotenv
-from datetime import datetime, time
 
 from services.booking.services import BookingService
 from services.booking.schemas import BookingCreate, BookingUpdate
 from services.booking.models import Booking
-from shared.utils import with_hydra_config, get_logger
+from shared.utils import with_hydra_config, get_logger, get_device_ip
 
 load_dotenv()
 
@@ -80,14 +79,18 @@ def main(cfg: DictConfig):
     global booking_service
     logger.info("Initializing Booking service")
 
+    ip_addr = get_device_ip()
+
     user_api_url = f"http://{ip_addr}:{cfg.user.server.port}/users"
     technician_api_url = f"http://{ip_addr}:{cfg.technician.server.port}/technicians"
 
+    service_api_url = f"http://{ip_addr}:{cfg.service.server.port}/services"
+
     booking_service = BookingService(
         cfg.database.url,
-        cfg.booking.user_service_api_url,
-        cfg.booking.technician_service_api_url,
-        cfg.booking.service_service_api_url,
+        user_api_url,
+        technician_api_url,
+        service_api_url,
     )
     logger.info("Starting Flask server...")
     app.run(**cfg.booking.server)

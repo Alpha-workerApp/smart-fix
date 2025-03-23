@@ -1,5 +1,5 @@
 from uuid import UUID
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from datetime import datetime, time
 from typing import Optional
 
@@ -7,7 +7,7 @@ from typing import Optional
 class BookingCreate(BaseModel):
     CID: UUID
     TID: UUID
-    SID: UUID
+    SID: int
     booking_date: datetime
     booking_time: time
     status: str
@@ -24,7 +24,7 @@ class Booking(BaseModel):
     BID: UUID
     CID: UUID
     TID: UUID
-    SID: UUID
+    SID: int
     booking_date: datetime
     booking_time: time
     status: str

@@ -1,0 +1,37 @@
+### Test Technician Status Update
+POST http://127.0.0.1:8006/technicians/status
+Content-Type: application/json
+
+{
+  "technician_id": "test_technician_123",
+  "status": "active"
+}
+
+### Test Technician Status Update (Missing ID)
+POST http://127.0.0.1:8006/technicians/status
+Content-Type: application/json
+
+{
+  "status": "inactive"
+}
+
+### Test Technician Status Update (Inactive Status)
+POST http://127.0.0.1:8006/technicians/status
+Content-Type: application/json
+
+{
+  "technician_id": "test_technician_123",
+  "status": "inactive"
+}
+
+### WebSocket Connection Test (Use a WebSocket client like wscat)
+# wscat -c ws://127.0.0.1:8006
+# Once connected:
+# {"type": "booking_request", "data": {"customer_id": "test_customer", "service_id": 1}}
+# {"type": "booking_accept", "data": {"technician_id": "test_technician_123", "customer_id": "test_customer", "customer_location": {"lat": 13.0827, "lon": 80.2707}}}
+# {"type": "location_update", "data": {"technician_id": "test_technician_123", "location": {"lat": 12.9716, "lon": 77.5946}, "customer_id": "test_customer"}}
+# {"type": "work_done", "data": {"technician_id": "test_technician_123", "customer_id": "test_customer", "work_report": "Service completed successfully."}}
+# {"type": "otp_request", "data": {"customer_id": "test_customer", "technician_id": "test_technician_123"}}
+# {"type": "otp_verification", "data": {"customer_id": "test_customer", "otp": "123456"}}
+# {"type": "payment_request", "data": {"customer_id": "test_customer", "technician_id": "test_technician_123", "payment_info": {"amount": 100.00, "currency": "USD"}}}
+# {"type": "issue_report", "data": {"customer_id": "test_customer", "technician_id": "test_technician_123", "issue_description": "Test issue"}}
