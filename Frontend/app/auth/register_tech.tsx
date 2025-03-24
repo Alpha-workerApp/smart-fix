@@ -14,7 +14,6 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
 import { useNavigation } from "@react-navigation/native";
 import { domain } from "../customStyles/custom";
 import { router } from "expo-router";
