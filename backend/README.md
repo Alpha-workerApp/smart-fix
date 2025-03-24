@@ -45,10 +45,6 @@ $ python .\scripts\run_services -h
 
 ```
 
-### Werkzeug error with service service
-
-https://stackoverflow.com/a/61729817
-
 ## Setup the environment for backend
 
 1. Clone the repository into your local filesystem.
@@ -89,4 +85,46 @@ $ poetry config virtualenvs.create false
 
 ```shell
 $ poetry install
+```
+
+### UML Diagrams
+
+-   **Class Diagram:** [https://www.mermaidchart.com/raw/8316f551-70d6-4b0f-96e2-21fe48057ee1?theme=dark&version=v0.1&format=svg](https://www.mermaidchart.com/raw/8316f551-70d6-4b0f-96e2-21fe48057ee1?theme=dark&version=v0.1&format=svg)
+-   **ER Diagram:** [https://www.mermaidchart.com/raw/dbc711ac-3e40-4fa0-996c-773d2392fb30?theme=light&version=v0.1&format=svg](https://www.mermaidchart.com/raw/dbc711ac-3e40-4fa0-996c-773d2392fb30?theme=light&version=v0.1&format=svg)
+-   **Flow Diagram:** [https://www.mermaidchart.com/raw/3c0075d1-9daf-4f81-9c9e-8ea811382d99?theme=dark&version=v0.1&format=svg](https://www.mermaidchart.com/raw/3c0075d1-9daf-4f81-9c9e-8ea811382d99?theme=dark&version=v0.1&format=svg)
+-   **Sequence Diagram:** [https://www.mermaidchart.com/raw/bdf5a122-5724-4b62-9452-5d2da8c91233?theme=dark&version=v0.1&format=svg](https://www.mermaidchart.com/raw/bdf5a122-5724-4b62-9452-5d2da8c91233?theme=dark&version=v0.1&format=svg)
+
+### Procedure to run the `app_test.py`
+
+-   Few new packages were added to install them do the following. Doing once is enough.
+
+```shell
+$ conda activate smart_fix
+
+$ cd backend
+
+$ poetry install
+
+```
+
+-   Terminal 1
+
+```shell
+$ conda activate smart_fix
+
+$ cd backend
+
+$ python .\scripts\run_services all
+```
+
+> Press Ctrl + C to stop
+
+-   Terminal 2
+
+```shell
+$ conda activate smart_fix
+
+$ cd backend
+
+$ python -m tests.app_test
 ```
