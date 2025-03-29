@@ -7,10 +7,10 @@ POST http://127.0.0.1:{{port}}/register
 Content-Type: application/json
 
 {
-  "email": "john.doe@example.com",
-  "phone": "1234567890",
-  "name": "John Doe",
-  "hashed_password": {{hashed_password}}
+  "email": "vijay@example.com",
+  "phone": "1239867890",
+  "name": "vijay",
+  "hashed_password": "vijay"
 }
 
 ###
@@ -20,12 +20,12 @@ POST http://127.0.0.1:{{port}}/technician_register
 Content-Type: application/json
 
 {
-  "email": "jane.doe@example.com",
-  "phone": "9876543210",
-  "name": "Jane Doe",
+  "email": "ss@example.com",
+  "phone": "9876593210",
+  "name": "Jane",
   "id_proof_type": "Aadhaar",
   "id_proof_number": "123456789101",
-  "hashed_password": {{hashed_password}},
+  "hashed_password": "1234",
   "service_category": "Electrical Services"
 }
 
@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 
 ### (After successful login, copy the token from the response)
-@user_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJOb25lIiwidXNlcl90eXBlIjoidXNlciIsImV4cCI6MTczOTkxNDY0MSwiaWF0IjoxNzM5MDUwNjQxfQ.bFIaR-DRBTIOl-6qzWIIkU8883Vlf6-iDWR1dRHNdrw
+@user_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJOb25lIiwidXNlcl90eXBlIjoidXNlciIsImV4cCI6MTc0MDc2NTg5OCwiaWF0IjoxNzM5OTAxODk4fQ.pJ1pJMd6z2wXdXSbyOFMh8ZKFGELYkWC_iBbEl23OC0
 
 
 ###
@@ -56,7 +56,7 @@ Content-Type: application/json
 }
 
 ### (After successful login, copy the token from the response)
-@technician_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiJOb25lIiwidXNlcl90eXBlIjoidGVjaG5pY2lhbiIsImV4cCI6MTczOTIyMzQ4NiwiaWF0IjoxNzM5MDUwNjg2fQ.O0W0rOPt26pvKjMtCgEAYiWjMvjyeIWtNPJk7EGdEhY
+@technician_jwt = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aWQiOiJOb25lIiwidXNlcl90eXBlIjoidGVjaG5pY2lhbiIsImV4cCI6MTc0MDA3NTIwNSwiaWF0IjoxNzM5OTAyNDA1fQ.78NXI0tV_8f_rkh06ZO-WLLVZ7U8O_OaB-5H2AnpWl0
 
 ###
 

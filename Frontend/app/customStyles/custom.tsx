@@ -11,6 +11,6 @@ export const shadowStyles = StyleSheet.create({
   },
 });
 
-export const domain = "192.168.7.4";
+export const domain = "192.168.248.89";
 
 export default { shadowStyles, domain };

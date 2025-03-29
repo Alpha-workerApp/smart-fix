@@ -21,13 +21,13 @@ Content-Type: application/json
 @TID=33d9a4f4-e084-462a-9f99-a720c3b0e8b7
 
 ### Get technician by TID
-GET http://localhost:{{port}}/technicians/{{TID}}
+GET http://localhost:{{port}}/technicians/55b93cb7-27ec-403d-9f0e-09a487dd987d
 
 ### Get Technician by Email
 GET http://localhost:{{port}}/technicians?email=jane.doe@example.com
-
+ 
 ### Update Technician by TID
-PUT http://localhost:{{port}}/technicians/8e9b5843-99b8-4c31-acc6-1d18dc8f9510 
+PUT http://localhost:{{port}}/technicians/{{TID}} 
 Content-Type: application/json
 
 {

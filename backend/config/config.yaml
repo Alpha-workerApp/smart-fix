@@ -1,8 +1,11 @@
 defaults:
+    - app_config
     - auth_config
+    - booking_config
     - service_config
     - technician_config
     - user_config
+    - search_config
     - _self_
 
 database:

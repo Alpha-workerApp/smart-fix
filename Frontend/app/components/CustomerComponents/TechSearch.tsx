@@ -1,59 +1,100 @@
-import { View, Text, TouchableOpacity, Image, TextInput, FlatList, BackHandler } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  FlatList,
+  ScrollView,
+  BackHandler,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { router } from "expo-router";
+import { domain } from "@/app/customStyles/custom";
 
-type Technician = {
-  id: string;
-  name: string;
-  status: string;
-  service_category: string;
-  location: string;
+type Service = {
+  SID: string;
+  serviceName?: string;
+  serviceCategory?: string;
+  details: {
+    prices?: Record<string, string>;
+    price?: string;
+  };
 };
 
-const dummyTechnicians: Technician[] = [
-  { id: '1', name: 'Alice Johnson', status: 'Available', service_category: 'Plumbing', location: 'New York' },
-  { id: '2', name: 'Bob Smith', status: 'Busy', service_category: 'Electrical', location: 'Los Angeles' },
-  { id: '3', name: 'Charlie Brown', status: 'Available', service_category: 'Carpentry', location: 'Chicago' },
-  { id: '4', name: 'Diana Prince', status: 'Offline', service_category: 'Painting', location: 'Houston' },
-  { id: '5', name: 'Ethan Hunt', status: 'Available', service_category: 'Plumbing', location: 'Phoenix' },
-];
+const ServiceSearch = () => {
+  const [fullServices, setFullServices] = useState<Service[]>([]);
+  const [displayedServices, setDisplayedServices] = useState<Service[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-const Search = () => {
-  const [searchText, setSearchText] = useState('');
-  const [filteredTechnicians, setFilteredTechnicians] = useState<Technician[]>(dummyTechnicians);
-
-  // Filter technicians based on search text
+  // Fetch services from API
   useEffect(() => {
-    if (searchText.trim() === '') {
-      setFilteredTechnicians(dummyTechnicians);
-    } else {
+    fetch(`http://${domain}:8003/services`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFullServices(data);
+        setDisplayedServices(data.slice(0, 12)); // Show only first 12 initially
+
+        // Extract unique categories
+        const uniqueCategories: string[] = Array.from(
+          new Set(data.map((service: any) => String(service.serviceCategory || "Others")))
+        );
+
+        setCategories(uniqueCategories);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  // Apply search and category filters
+  useEffect(() => {
+    let filtered = fullServices;
+
+    if (searchText.trim()) {
       const lowerSearch = searchText.toLowerCase();
-      const filtered = dummyTechnicians.filter((tech) =>
-        tech.name.toLowerCase().includes(lowerSearch) ||
-        tech.service_category.toLowerCase().includes(lowerSearch)
-      );
-      setFilteredTechnicians(filtered);
+      filtered = filtered.filter((service) => {
+        const name = (service.serviceName || "").toLowerCase();
+        const category = (service.serviceCategory || "").toLowerCase();
+        return name.includes(lowerSearch) || category.includes(lowerSearch);
+      });
     }
+
+    if (selectedCategory) {
+      filtered = filtered.filter((service) => service.serviceCategory === selectedCategory);
+    }
+
+    setDisplayedServices(searchText.trim() || selectedCategory ? filtered : fullServices.slice(0, 12));
 
     const onBackPress = () => {
       router.replace("/customer");
-      return true; 
+      return true;
     };
 
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      onBackPress
-    );
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
     return () => backHandler.remove();
-  }, [searchText]);
+  }, [searchText, selectedCategory, fullServices]);
 
-  const renderItem = ({ item }: { item: Technician }) => (
-    <View className="bg-white p-4 my-2 rounded shadow-md">
-      <Text className="font-bold text-lg">{item.name}</Text>
-      <Text>Status: {item.status}</Text>
-      <Text>Category: {item.service_category}</Text>
-      <Text>Location: {item.location}</Text>
+  // Toggle category filter
+  const toggleCategory = (category: string) => {
+    setSelectedCategory(selectedCategory === category ? null : category);
+  };
+
+  // Render each service item
+  const renderItem = ({ item }: { item: Service }) => (
+    <View className="bg-white p-4 my-2 rounded-3xl shadow-md">
+      <Text className="font-nunito-bold text-lg">{item.serviceName || "Unnamed Service"}</Text>
+      <Text className="font-nunito-light">Category: {item.serviceCategory || "N/A"}</Text>
+      <Text className="font-nunito-bold">
+        Cost:{" "}
+        {item.details.prices
+          ? Object.values(item.details.prices)[0] // Display first price if multiple
+          : item.details.price || "N/A"}
+      </Text>
+      <TouchableOpacity className="bg-blue-500 w-[80px] mt-3 rounded-full py-2">
+        <Text className="font-nunito-semibold text-base px-3 text-white ">Book Now</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -61,9 +102,7 @@ const Search = () => {
     <View className="w-screen h-screen bg-gray-200 relative mt-8">
       {/* Header */}
       <View className="w-full items-center mt-10">
-        <View className="flex flex-row gap-1">
-          <Text className="font-nunito-bold text-2xl mt-1">Search</Text>
-        </View>
+        <Text className="font-nunito-bold text-2xl mt-1">Service Search</Text>
       </View>
 
       {/* Back Button */}
@@ -76,36 +115,43 @@ const Search = () => {
         <View className="flex flex-row items-center bg-white rounded-full shadow-md px-3 py-2">
           <Image source={require("../../../assets/icons/search-icon.png")} className="w-6 h-6 mr-2" />
           <TextInput
-            placeholder="Search Technicians"
-            className="flex-1 text-base" // Reduced text size from text-lg to text-base
+            placeholder="Search Services"
+            className="flex-1 text-base"
             value={searchText}
             onChangeText={setSearchText}
           />
-          <TouchableOpacity 
-            style={{
-              backgroundColor: "#2563EB",
-              paddingHorizontal: 10,
-              paddingVertical: 4,
-              borderRadius: 9999,
-            }}
-          >
+          <TouchableOpacity className="bg-blue-500 px-4 py-2 rounded-full">
             <Text className="text-white font-semibold text-base">Search</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Technician List */}
-      <View className="mt-6 px-5 flex-1">
-        {filteredTechnicians.length > 0 ? (
-          <FlatList
-            data={filteredTechnicians}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            showsVerticalScrollIndicator={false}
-          />
+      {/* Category Filter Buttons */}
+      <View className="h-[55px]">
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="my-4 px-5 ">
+        {categories.map((category) => (
+          <TouchableOpacity
+            key={category}
+            onPress={() => toggleCategory(category)}
+            className={`font-nunito-medium px-4 py-1 rounded-2xl mr-2 shadow-sm ${
+              selectedCategory === category ? "bg-blue-500" : "bg-white"
+            }`}
+          >
+            <Text className={`font-semibold ${selectedCategory === category ? "text-white" : "text-black"}`}>
+              {category}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      </View>
+
+      {/* Services List */}
+      <View className="px-5 flex-1">
+        {displayedServices.length > 0 ? (
+          <FlatList data={displayedServices} keyExtractor={(item) => item.SID} renderItem={renderItem} showsVerticalScrollIndicator={false} />
         ) : (
           <View className="items-center mt-10">
-            <Text className="text-lg">No technicians found.</Text>
+            <Text className="text-lg">No services found.</Text>
           </View>
         )}
       </View>
@@ -113,4 +159,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default ServiceSearch;
