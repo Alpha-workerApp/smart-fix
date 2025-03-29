@@ -61,6 +61,11 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
           <Image source={require("../../../assets/icons/status-icon.png")} className="size-5 mt-1"/>
           <Text className="text-black font-nunito-semibold text-xl">Status</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => handleOptionPress("/components/CustomerComponents/workerSearch")} style={{ paddingVertical: 10 }} className="flex flex-row gap-2">
+          <Image source={require("../../../assets/icons/worker.png")} className="size-6 mb-1"/>
+          <Text className="text-black font-nunito-semibold text-xl">Find</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity onPress={() => handleOptionPress("/components/CustomerComponents/EditProfile")} style={{ paddingVertical: 10 }} className="mb-20 flex flex-row gap-2">
@@ -75,80 +80,3 @@ export default Sidebar;
 
 
 
-
-
-// import { View, Text, TouchableOpacity, Image, Animated, Dimensions } from "react-native";
-// import { useRouter } from "expo-router";
-// import { useEffect, useRef } from "react";
-
-// const { width } = Dimensions.get("window"); // Get screen width
-
-// const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-//   const router = useRouter();
-//   const slideAnim = useRef(new Animated.Value(-width)).current; // Start off-screen
-
-//   useEffect(() => {
-//     Animated.timing(slideAnim, {
-//       toValue: isOpen ? 0 : -width, // Slide in or out
-//       duration: 300, // Animation duration
-//       useNativeDriver: true,
-//     }).start();
-//   }, [isOpen]);
-
-//   return (
-//     <Animated.View
-//       style={{
-//         position: "absolute",
-//         top: 0,
-//         left: 0,
-//         width: 200,
-//         height: "100%",
-//         backgroundColor: "white",
-//         padding: 20,
-//         transform: [{ translateX: slideAnim }], // Slide effect
-//         shadowColor: "#000",
-//         shadowOpacity: 0.5,
-//         shadowRadius: 10,
-//       }}
-//       className="z-20 flex flex-col items-center justify-between border-r-2 border-gray-200"
-//     >
-//       {/* Close Button */}
-//       <View className="w-full flex flex-row justify-end">
-//         <TouchableOpacity onPress={onClose}>
-//           <Image
-//             source={require("../../../assets/icons/close-icon.png")}
-//             style={{ width: 14, height: 14 }}
-//           />
-//         </TouchableOpacity>
-//       </View>
-
-//       {/* Sidebar Items */}
-//       <View className="flex flex-col gap-5 items-center">
-//         <Text className="text--black font-nunito-bold text-2xl">Menu</Text>
-
-//         <TouchableOpacity onPress={() => router.push("/components/CustomerComponents/TechSearch")} style={{ paddingVertical: 10 }} className="flex flex-row gap-2">
-//           <Image source={require("../../../assets/icons/search-icon.png")} className="size-5"/>
-//           <Text className="text-black font-nunito-semibold text-xl">Search</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity onPress={() => router.push("/components/CustomerComponents/status")} style={{ paddingVertical: 10 }} className="flex flex-row gap-2">
-//           <Image source={require("../../../assets/icons/status-icon.png")} className="size-5"/>
-//           <Text className="text-black font-nunito-semibold text-xl">Status</Text>
-//         </TouchableOpacity>
-
-//         {/* <TouchableOpacity onPress={() => router.push("/")} style={{ paddingVertical: 10 }} className="flex flex-row gap-2">
-//         <Image source={require("../../assets/icons/other-icon.png")} className="size-5"/>
-//           <Text className="text-black font-nunito-semibold text-xl">Others</Text>
-//         </TouchableOpacity> */}
-        
-//       </View>
-//       <TouchableOpacity onPress={() => router.push("/components/CustomerComponents/EditProfile")} style={{ paddingVertical: 10 }} className="mb-20 flex flex-row gap-2">
-//           <Image source={require("../../../assets/icons/settings-icon.png")} className="size-5"/>
-//           <Text className="text-black font-nunito-semibold text-xl">Settings</Text>
-//       </TouchableOpacity>
-      
-//     </Animated.View>
-//   );
-// };
-
-// export default Sidebar;

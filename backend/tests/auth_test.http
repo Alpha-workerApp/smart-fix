@@ -36,8 +36,8 @@ POST http://127.0.0.1:{{port}}/login
 Content-Type: application/json
 
 {
-  "email": "john.doe@example.com",
-  "hashed_password": {{hashed_password}}
+  "email": "vijay@example.com",
+  "hashed_password": "vijay"
 }
 
 ### (After successful login, copy the token from the response)

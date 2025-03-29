@@ -8,10 +8,11 @@ Content-Type: application/json
 }
 
 ### Test Technician Status Update (Missing ID)
-POST http://localhost:8006/technicians/status
+POST http://localhost:8009/technicians/status
 Content-Type: application/json
 
 {
+  "technician_id": "test_technician_123",
   "status": "inactive"
 }
 

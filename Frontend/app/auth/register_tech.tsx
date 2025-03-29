@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { domain } from "../customStyles/custom";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+import RNPickerSelect from "react-native-picker-select";
 
 type FormDataType = {
   name: string;
@@ -40,18 +41,23 @@ const Register = () => {
     id_proof_number: "",
     service_category: "",
   });
+
+  const [loading, setLoading] = useState(false);
+
+  // Toast notifications
   const showToast = useCallback(
     (type: "success" | "error" | "warning", msg: string) => {
       Toast.show({ type, text1: msg });
     },
     []
   );
-  const [loading, setLoading] = useState(false);
 
+  // Handle Input Change
   const handleInputChange = (field: keyof FormDataType, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Form Submission
   const handleRegister = async () => {
     if (
       !formData.name ||
@@ -65,28 +71,32 @@ const Register = () => {
       Alert.alert("Error", "Please fill all fields before registering.");
       return;
     }
-    
+
     setLoading(true);
     try {
+      const requestBody = JSON.stringify(formData);
+      console.log("📤 Sending Request Body:", requestBody);
+
       const response = await fetch(`http://${domain}:8002/technician_register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: requestBody,
       });
 
       const result = await response.json();
+      console.log("📥 API Response:", result);
 
       if (response.ok) {
         router.replace("/auth/login_user");
-        showToast("success","Registration successfull")
+        showToast("success", "Registration successful!");
       } else {
         Alert.alert("Error", result.message || "Registration failed!");
       }
     } catch (error) {
-      showToast("error","Network request failed!")
-      console.error("Registration Error:", error);
+      showToast("error", "Network request failed!");
+      console.error("❌ Registration Error:", error);
     }
     setLoading(false);
   };
@@ -105,34 +115,106 @@ const Register = () => {
             >
               <Text className="text-3xl font-nunito-bold">Register Yourself</Text>
               <Text className="font-nunito text-lg">Enter your details</Text>
-              
+
+              {/* Full Name */}
               <TextInput
                 className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-                placeholder="Enter full name"
+                placeholder="Full Name"
                 value={formData.name}
                 onChangeText={(text) => handleInputChange("name", text)}
               />
+
+              {/* Email */}
               <TextInput
                 className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-                placeholder="Enter email"
+                placeholder="Email"
+                keyboardType="email-address"
                 value={formData.email}
                 onChangeText={(text) => handleInputChange("email", text)}
               />
+
+              {/* Phone Number */}
               <TextInput
                 className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-                placeholder="Enter phone number"
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
                 value={formData.phone}
-                keyboardType="numeric"
                 onChangeText={(text) => handleInputChange("phone", text)}
               />
+
+              {/* Password */}
               <TextInput
                 className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
-                placeholder="Enter password"
+                placeholder="Password"
                 secureTextEntry
                 value={formData.hashed_password}
                 onChangeText={(text) => handleInputChange("hashed_password", text)}
               />
-              
+
+              {/* ID Proof Type - Picker */}
+              <View className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4">
+                <RNPickerSelect
+                  placeholder={{ label: "Select ID Proof Type", value: "" }}
+                  value={formData.id_proof_type}
+                  onValueChange={(value) => handleInputChange("id_proof_type", value)}
+                  items={[
+                    { label: "Aadhar Number", value: "Aadhar" },
+                    { label: "PAN Number", value: "PAN" },
+                    { label: "Voter ID", value: "Voter ID" },
+                  ]}
+                  style={{
+                    inputAndroid: {
+                      backgroundColor: "#f4f4f4",
+                      paddingVertical: 1,
+                      height:35,
+                      paddingHorizontal: 10,
+                      borderRadius: 8,
+                      fontSize: 16,
+                      color: "#333",
+                      width: 320,
+                      alignSelf: "center",
+                    },
+                  }}
+                />
+              </View>
+
+              {/* ID Proof Number */}
+              <TextInput
+                className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4 text-lg"
+                placeholder="ID Proof Number"
+                value={formData.id_proof_number}
+                onChangeText={(text) => handleInputChange("id_proof_number", text)}
+              />
+
+              {/* Service Category - Picker */}
+              <View className="bg-[#f4f4f4] w-[320px] rounded-lg px-3 py-4">
+                <RNPickerSelect
+                  placeholder={{ label: "Select Service Category", value: "" }}
+                  value={formData.service_category}
+                  onValueChange={(value) => handleInputChange("service_category", value)}
+                  items={[
+                    { label: "Electrician", value: "Electrician" },
+                    { label: "Plumber", value: "Plumber" },
+                    { label: "Carpenter", value: "Carpenter" },
+                    { label: "Mechanic", value: "Mechanic" },
+                  ]}
+                  style={{
+                    inputAndroid: {
+                      backgroundColor: "#f4f4f4",
+                      paddingVertical: 1,
+                      height:35,
+                      paddingHorizontal: 10,
+                      borderRadius: 8,
+                      fontSize: 10,
+                      color: "#333",
+                      width: 320,
+                      alignSelf: "center",
+                    },
+                  }}
+                />
+              </View>
+
+              {/* Register Button */}
               <TouchableOpacity
                 className="px-[135px] my-5 py-4 bg-black rounded-lg flex flex-row justify-center items-center"
                 onPress={handleRegister}
