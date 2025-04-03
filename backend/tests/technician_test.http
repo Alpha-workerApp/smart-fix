@@ -24,7 +24,7 @@ Content-Type: application/json
 GET http://localhost:{{port}}/technicians/55b93cb7-27ec-403d-9f0e-09a487dd987d
 
 ### Get Technician by Email
-GET http://localhost:{{port}}/technicians?email=jane.doe@example.com
+GET http://localhost:{{port}}/technicians?email=suryaa@example.com
  
 ### Update Technician by TID
 PUT http://localhost:{{port}}/technicians/{{TID}} 

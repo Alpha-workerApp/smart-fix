@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const workerSearch = () => {
+const ConnectCustomer = () => {
   return (
     <View>
-      <Text>workerSearch</Text>
+      <Text>ConnectCustomer</Text>
     </View>
   )
 }
 
-export default workerSearch
+export default ConnectCustomer

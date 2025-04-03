@@ -1,3 +1,5 @@
+
+
 from datetime import datetime
 from uuid import UUID
 from flask import Flask, request, jsonify
@@ -75,6 +77,8 @@ def handle_booking_request(data):
     Emits 'booking_request' to the selected technician.
     Creates a booking record in the booking service.
     """
+    print(type(data))
+    print(data)
     customer_id = data.get("customer_id")
     service_id = data.get("service_id")
     logger.info(

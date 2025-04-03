@@ -62,10 +62,6 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
           <Text className="text-black font-nunito-semibold text-xl">Status</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleOptionPress("/components/CustomerComponents/workerSearch")} style={{ paddingVertical: 10 }} className="flex flex-row gap-2">
-          <Image source={require("../../../assets/icons/worker.png")} className="size-6 mb-1"/>
-          <Text className="text-black font-nunito-semibold text-xl">Find</Text>
-        </TouchableOpacity>
       </View>
 
       <TouchableOpacity onPress={() => handleOptionPress("/components/CustomerComponents/EditProfile")} style={{ paddingVertical: 10 }} className="mb-20 flex flex-row gap-2">

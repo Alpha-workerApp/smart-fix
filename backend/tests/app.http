@@ -3,7 +3,7 @@ POST http://127.0.0.1:8009/technicians/status
 Content-Type: application/json
 
 {
-  "technician_id": "test_technician_123",
+  "technician_id": "077b4fcb-279b-4ae3-9318-75ca1353cffc",
   "status": "active"
 }
 

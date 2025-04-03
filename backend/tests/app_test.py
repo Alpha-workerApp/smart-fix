@@ -4,7 +4,7 @@ import threading
 import requests
 
 # Server details
-SERVER_URL = "http://localhost:8009"  # Update if needed
+SERVER_URL = "http://localhost:8009"
 USER_ID = "83075689-9319-419b-a60c-9f9235960189"
 TECHNICIAN_ID = "55b93cb7-27ec-403d-9f0e-09a487dd987d"
 SERVICE_ID = 110
