@@ -1,0 +1,74 @@
+# Define constants for easy reference
+@app_api_url = http://127.0.0.1:8006 
+@booking_api_url = http://127.0.0.1:8004
+@customer_id = 83075689-9319-419b-a60c-9f9235960189
+@technician_id = 55b93cb7-27ec-403d-9f0e-09a487dd987d
+@service_id = 110
+
+### 1. Update Technician Status (TECH)
+POST {{app_api_url}}/technicians/status
+Content-Type: application/json
+
+{
+    "technician_id": "{{technician_id}}",
+    "status": "active"
+}
+
+### 2. Handle Booking Request (CUSTOMER)
+POST {{app_api_url}}/booking/request
+Content-Type: application/json
+
+{
+    "customer_id": "{{customer_id}}",
+    "service_id": "{{service_id}}",
+    "address": "123 Main St, Anytown, USA",
+    "latitude": 40.7128,
+    "longitude": -74.0060
+}
+
+
+### 3. Get Bookings for Technician (TECH)
+GET {{app_api_url}}/get/booking?tid={{technician_id}}
+
+### 4. Get Booking details (TECH)
+# Paste the Booking_id received in previous response below
+@booking_id = 6b4e821b-439b-4950-8899-2ce18b35b781
+GET {{booking_api_url}}/bookings/{{booking_id}}
+
+### 4. Update Technician Location (TECH)
+POST {{app_api_url}}/technician/location
+Content-Type: application/json
+
+{
+    "tid": "{{technician_id}}",
+    "longitude": -74.0060,
+    "latitude": 40.7128
+}
+
+### 5. Update Customer Location (CUSTOMER)
+POST {{app_api_url}}/customer/location
+Content-Type: application/json
+
+{
+    "cid": "{{customer_id}}",
+    "longitude": -74.0060,
+    "latitude": 40.7128
+}
+
+### 6. Get Customer Location (TECH)
+GET {{app_api_url}}/customer/location?cid={{customer_id}}
+
+### 7. Get Technician Location (CUSTOMER)
+GET {{app_api_url}}/technician/location?tid={{technician_id}}
+
+### 8. Delete Customer Location (CUSTOMER)
+DELETE {{app_api_url}}/customer/location?cid={{customer_id}}
+
+### 9. Delete Technician Location (TECH)
+DELETE {{app_api_url}}/technician/location?tid={{technician_id}}
+
+### 10. Delete Active Technician (TECH)
+DELETE {{app_api_url}}/delete/active_technician?tid={{technician_id}}
+
+### 11. Delete Booking (TECH/CUSTOMER)
+DELETE {{app_api_url}}/delete/booking?tid={{technician_id}}
