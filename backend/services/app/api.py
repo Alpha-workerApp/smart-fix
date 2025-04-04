@@ -1,10 +1,6 @@
-
-
 from datetime import datetime
 from uuid import UUID
 from flask import Flask, request, jsonify
-from flask_socketio import SocketIO, emit
-from threading import Lock
 from omegaconf import DictConfig
 import requests
 from dotenv import load_dotenv
@@ -16,14 +12,15 @@ from shared.utils import get_logger, with_hydra_config, get_device_ip
 load_dotenv()
 
 app = Flask(__name__)
-socketio = SocketIO(app)
-thread_lock = Lock()
 
 logger = get_logger("app")
 
 # Store active technicians and their statuses
 active_technicians = {}
-customer_connections = {}
+bookings = {}  # tid: (sid, cid, bid)
+
+technician_loc = {}  # tid: (lat, long)
+customer_loc = {}  # cid: (lat, long)
 
 service_api_url: str
 technician_api_url: str
@@ -31,20 +28,31 @@ technician_api_url: str
 booking_service: BookingService
 
 
+@app.route("/")
+def home():
+    return "home"
+
+
+# 1: Called by technician to set status active
 @app.route("/technicians/status", methods=["POST"])
 def update_technician_status():
     """
-    Updates the status of a technician.
+    Update the status of a technician.
 
-    Expects a JSON payload with 'technician_id' and 'status' (either 'active' or 'inactive').
+    Expected JSON input:
+    {
+        "technician_id": "string",  # The ID of the technician
+        "status": "string"           # The status of the technician ("active" or "inactive")
+    }
 
     Returns:
-        - 200 OK with a success message if the status is updated.
-        - 400 Bad Request if 'technician_id' is missing.
+    - 200: Status updated successfully
+    - 400: Technician ID is required
     """
+
     data = request.get_json()
     technician_id = data.get("technician_id")
-    status = data.get("status")
+    status = data.get("status")  # "active" or "inactive"
 
     if technician_id:
         active_technicians[technician_id] = status
@@ -54,38 +62,38 @@ def update_technician_status():
     return jsonify({"error": "Technician ID is required"}), 400
 
 
-@socketio.on("connect")
-def handle_connect():
+# 2: Called by Customer to make booking
+@app.route("/booking/request", methods=["POST"])
+def handle_booking_request():
     """
-    Handles WebSocket client connections.
+    Handle booking requests from customers.
 
-    Emits a 'response' message to the connected client.
+    Expected JSON input:
+    {
+        "customer_id": "string",  # The ID of the customer
+        "service_id": "string",    # The ID of the service requested
+        "address": "string",        # The address for the booking
+        "latitude": float,          # The latitude of the location
+        "longitude": float          # The longitude of the location
+    }
+
+    Returns:
+    - 200: Booking request processed successfully
+    - 404: No technician available for the requested service
     """
-    logger.info("Client connected")
-    emit("response", {"message": "Connected to WebSocket server"})
-
-
-@socketio.on("booking_request")
-def handle_booking_request(data):
-    """
-    Handles booking requests from customers.
-
-    Expects a JSON payload with 'customer_id' and 'service_id'.
-    Finds an available technician and forwards the booking request.
-
-    Emits 'booking_response' to the customer with the booking status.
-    Emits 'booking_request' to the selected technician.
-    Creates a booking record in the booking service.
-    """
-    print(type(data))
-    print(data)
+    data = request.get_json()
     customer_id = data.get("customer_id")
     service_id = data.get("service_id")
+    address = data.get("address")
+    latitude = data.get("latitude")
+    longitude = data.get("longitude")
+
     logger.info(
         f"Booking request received from customer {customer_id} for service {service_id}"
     )
 
     def find_technician(available_technicians, sid):
+        """Find a technician that matches the service category."""
         response = requests.get(f"{service_api_url}/{sid}")
 
         if response.status_code == 200:
@@ -109,231 +117,346 @@ def handle_booking_request(data):
         logger.warning("No matching technician found")
         return None
 
-    # Store customer connection
-    customer_connections[customer_id] = service_id
-
-    # Forward booking request to available technicians
     available_technicians = {
         tid: status for tid, status in active_technicians.items() if status == "active"
     }
 
-    logger.info(available_technicians)
+    logger.info(f"Available technicians: {available_technicians}")
 
     selected_technician = find_technician(available_technicians, service_id)
 
     if selected_technician:
-        emit(
-            "booking_response",
-            {"status": "pending", "technician_id": selected_technician},
-            room=customer_id,
-        )
-        socketio.emit(
-            "booking_request",
-            {"customer_id": customer_id, "service_id": service_id},
-            room=selected_technician,
-        )
-        logger.info(f"Booking request forwarded to technician {selected_technician}")
-        # Create a booking in booking service.
-        # try:
+        # Create booking data using the extracted address, latitude, and longitude
         booking_data = BookingCreate(
             UID=UUID(customer_id),
             TID=UUID(selected_technician),
             SID=service_id,
-            booking_date=datetime.now(),  # Add the current date and time
+            booking_date=datetime.now(),
             booking_time=datetime.now().time(),
             status="pending",
-            address="Test Address",  # Add test address
-            longitude=0.0,  # Add test longitude
-            latitude=0.0,  # Add test latitude
+            address=address,  # Use the address from the request
+            longitude=longitude,  # Use the longitude from the request
+            latitude=latitude,  # Use the latitude from the request
         )
         new_booking: Booking = booking_service.create_booking(booking_data)
-        logger.info(
-            f"Booking created in booking service: {new_booking.BID}"
-        )  # Log the booking id
-        # except Exception as e:
-        #     logger.error(f"Error creating booking in booking service: {str(e)}")
+        logger.info(f"Booking created in booking service: {new_booking.BID}")
+        bookings[selected_technician] = (service_id, customer_id, new_booking.BID)
+        return jsonify({"status": "pending", "technician_id": selected_technician}), 200
     else:
-        emit(
-            "booking_response", {"status": "no_technician_available"}, room=customer_id
-        )
         logger.warning(f"No technician available for customer {customer_id}")
+        return jsonify({"status": "no_technician_available"}), 404
 
 
-@socketio.on("booking_accept")
-def handle_booking_accept(data):
+# 3: Called by technician continuously until gets response
+@app.route("/get/booking", methods=["GET"])
+def get_bookings():
     """
-    Handles booking acceptance from technicians.
+    Retrieve booking for a given technician ID (TID).
 
-    Expects a JSON payload with 'technician_id', 'customer_id', and 'customer_location'.
-    Notifies the customer and sends the customer's location to the technician.
+    Expected query parameters:
+    - tid: string (Technician ID)
+
+    Returns:
+    - 200: Bookings retrieved successfully
+    - 400: Technician ID is required
+    - 404: No bookings found for this technician
     """
-    technician_id = data.get("technician_id")
-    customer_id = data.get("customer_id")
-    customer_location = data.get("customer_location")
-    logger.info(
-        f"Booking accepted by technician {technician_id} for customer {customer_id}"
+    technician_id = request.args.get("tid")  # Get technician ID from query parameters
+
+    if not technician_id:
+        logger.error("Technician ID (tid) is required")
+        return jsonify({"error": "Technician ID (tid) is required"}), 400
+
+    # Retrieve booking for the given technician ID
+    technician_bookings = (
+        {
+            "service_id": bookings[technician_id][0],
+            "customer_id": bookings[technician_id][1],
+            "booking_id": bookings[technician_id][2],
+        }
+        if technician_id in bookings
+        else None
     )
 
-    # Notify customer of booking acceptance
-    emit(
-        "booking_response",
-        {"status": "accepted", "technician_id": technician_id},
-        room=customer_id,
-    )
-
-    # Send customer location to technician
-    socketio.emit(
-        "customer_location", {"location": customer_location}, room=technician_id
-    )
-    logger.info(f"Customer location sent to technician {technician_id}")
-
-
-@socketio.on("location_update")
-def handle_location_update(data):
-    """
-    Handles location updates from technicians.
-
-    Expects a JSON payload with 'technician_id', 'location', and 'customer_id'.
-    Notifies the customer of the technician's location.
-    """
-    technician_id = data.get("technician_id")
-    location = data.get("location")
-    customer_id = data.get("customer_id")
-    logger.info(
-        f"Location update from technician {technician_id} for customer {customer_id}"
-    )
-
-    # Notify customer of technician's location
-    emit(
-        "location_update",
-        {"technician_id": technician_id, "location": location},
-        room=customer_id,
-    )
-
-
-@socketio.on("work_done")
-def handle_work_done(data):
-    """
-    Handles work completion notifications from technicians.
-
-    Expects a JSON payload with 'technician_id', 'customer_id', and 'work_report'.
-    Notifies the customer that the work is done.
-    """
-    technician_id = data.get("technician_id")
-    customer_id = data.get("customer_id")
-    work_report = data.get("work_report")
-    logger.info(f"Work done by technician {technician_id} for customer {customer_id}")
-
-    # Notify customer that work is done
-    emit(
-        "work_done",
-        {"technician_id": technician_id, "work_report": work_report},
-        room=customer_id,
-    )
-
-
-@socketio.on("otp_request")
-def handle_otp_request(data):
-    # Change the logic as you want
-    customer_id = data.get("customer_id")
-    technician_id = data.get("technician_id")
-    logger.info(
-        f"OTP request from customer {customer_id} for technician {technician_id}"
-    )
-
-    # Request OTP from technician
-    technician_response = requests.get(f"{technician_api_url}/{technician_id}/auth")
-    if technician_response.status_code == 200:
-        hashed_password = technician_response.json().get("hashed_password")
-        emit("otp_response", {"hashed_password": hashed_password}, room=customer_id)
-        logger.info(f"OTP response sent to customer {customer_id}")
+    if technician_bookings:
+        logger.info(
+            f"Bookings retrieved for technician {technician_id}: {technician_bookings}"
+        )
+        return jsonify({"bookings": technician_bookings}), 200
     else:
-        emit("otp_response", {"error": "Technician not found"}, room=customer_id)
-        logger.error(f"Technician {technician_id} not found for OTP request")
+        logger.warning(f"No bookings found for technician {technician_id}")
+        return jsonify({"message": "No bookings found for this technician"}), 404
 
 
-@socketio.on("otp_verification")
-def handle_otp_verification(data):
-    # Change the logic as you want
-    customer_id = data.get("customer_id")
-    otp = data.get("otp")
-    logger.info(f"OTP verification from customer {customer_id}")
+# 4: Technician calls the "{booking_api}/bookings/<bid>" to get the booking info (incl customer id as uid)
 
-    # Here you would verify the OTP (this is a placeholder)
-    if otp == "123456":  # Replace with actual OTP verification logic
-        emit("otp_verification_response", {"status": "verified"}, room=customer_id)
-        logger.info(f"OTP verified for customer {customer_id}")
+
+# Called by technician
+@app.route("/technician/location", methods=["POST"])
+def update_technician_location():
+    """
+    Add a technician's location.
+
+    Expected JSON input:
+    {
+        "tid": "string",      # The ID of the technician
+        "longitude": float,    # The longitude of the technician's location
+        "latitude": float      # The latitude of the technician's location
+    }
+
+    Returns:
+    - 200: Technician location added successfully
+    - 400: Technician ID, longitude, and latitude are required
+    """
+    data = request.get_json()
+    technician_id = data.get("tid")
+    longitude = data.get("longitude")
+    latitude = data.get("latitude")
+
+    if not technician_id or longitude is None or latitude is None:
+        logger.error("Technician ID, longitude, and latitude are required")
+        return (
+            jsonify({"error": "Technician ID, longitude, and latitude are required"}),
+            400,
+        )
+
+    # Store the technician's location
+    technician_loc[technician_id] = (latitude, longitude)
+    logger.info(
+        f"Technician {technician_id} location updated to: ({longitude}, {latitude})"
+    )
+    return jsonify({"message": "Technician location added successfully"}), 200
+
+
+# Called by customer
+@app.route("/customer/location", methods=["POST"])
+def update_customer_location():
+    """
+    Add a customer's location.
+
+    Expected JSON input:
+    {
+        "cid": "string",      # The ID of the customer
+        "longitude": float,    # The longitude of the customer's location
+        "latitude": float      # The latitude of the customer's location
+    }
+
+    Returns:
+    - 201: Customer location added successfully
+    - 400: Customer ID, longitude, and latitude are required
+    """
+    data = request.get_json()
+    customer_id = data.get("cid")
+    longitude = data.get("longitude")
+    latitude = data.get("latitude")
+
+    if not customer_id or longitude is None or latitude is None:
+        logger.error("Customer ID, longitude, and latitude are required")
+        return (
+            jsonify({"error": "Customer ID, longitude, and latitude are required"}),
+            400,
+        )
+
+    # Store the customer's location
+    customer_loc[customer_id] = (latitude, longitude)
+    logger.info(
+        f"Customer {customer_id} location updated to: ({longitude}, {latitude})"
+    )
+    return jsonify({"message": "Customer location added successfully"}), 201
+
+
+# Called by technician
+@app.route("/customer/location", methods=["GET"])
+def get_customer_location():
+    """
+    Retrieve the location (latitude, longitude) of a given customer ID (CID).
+
+    Expected query parameters:
+    - cid: string (Customer ID)
+
+    Returns:
+    - 200: Customer location retrieved successfully
+    - 400: Customer ID (cid) is required
+    - 404: No location found for this customer
+    """
+    customer_id = request.args.get("cid")  # Get customer ID from query parameters
+
+    if not customer_id:
+        logger.error("Customer ID (cid) is required")
+        return jsonify({"error": "Customer ID (cid) is required"}), 400
+
+    # Retrieve the customer's location
+    location = customer_loc.get(customer_id)
+
+    if location:
+        logger.info(f"Location retrieved for customer {customer_id}: {location}")
+        return (
+            jsonify(
+                {
+                    "customer_id": customer_id,
+                    "location": {"latitude": location[0], "longitude": location[1]},
+                }
+            ),
+            200,
+        )
     else:
-        emit("otp_verification_response", {"status": "invalid"}, room=customer_id)
-        logger.warning(f"Invalid OTP for customer {customer_id}")
+        logger.warning(f"No location found for customer {customer_id}")
+        return jsonify({"message": "No location found for this customer"}), 404
 
 
-@socketio.on("payment_request")
-def handle_payment_request(data):
-    # Change the logic as you want
-    customer_id = data.get("customer_id")
-    technician_id = data.get("technician_id")
-    payment_info = data.get("payment_info")
-    logger.info(
-        f"Payment request from customer {customer_id} to technician {technician_id}"
-    )
-
-    # Process payment (this is a placeholder)
-
-    socketio.emit(
-        "payment_received", {"technician_id": technician_id}, room=technician_id
-    )
-    logger.info(f"Payment received notification sent to technician {technician_id}")
-
-
-@socketio.on("issue_report")
-def handle_issue_report(data):
+# Called by customer
+@app.route("/technician/location", methods=["GET"])
+def get_technician_location():
     """
-    Handles issue reports from customers.
+    Retrieve the location (latitude, longitude) of a given technician ID (TID).
 
-    Expects a JSON payload with 'customer_id', 'technician_id', and 'issue_description'.
-    Notifies the technician of the issue.
+    Expected query parameters:
+    - tid: string (Technician ID)
+
+    Returns:
+    - 200: Technician location retrieved successfully
+    - 400: Technician ID (tid) is required
+    - 404: No location found for this technician
     """
-    customer_id = data.get("customer_id")
-    technician_id = data.get("technician_id")
-    issue_description = data.get("issue_description")
+    technician_id = request.args.get("tid")
 
-    logger.info(
-        f"Issue report from customer {customer_id} to technician {technician_id}"
-    )
+    if not technician_id:
+        logger.error("Technician ID (tid) is required")
+        return jsonify({"error": "Technician ID (tid) is required"}), 400
 
-    # Notify technician of the issue
-    socketio.emit(
-        "issue_reported",
-        {"customer_id": customer_id, "issue_description": issue_description},
-        room=technician_id,
-    )
+    # Retrieve the technician's location
+    location = technician_loc.get(technician_id)
+
+    if location:
+        logger.info(f"Location retrieved for technician {technician_id}: {location}")
+        return (
+            jsonify(
+                {
+                    "technician_id": technician_id,
+                    "location": {"latitude": location[0], "longitude": location[1]},
+                }
+            ),
+            200,
+        )
+    else:
+        logger.warning(f"No location found for technician {technician_id}")
+        return jsonify({"message": "No location found for this technician"}), 404
 
 
-@socketio.on("disconnect")
-def handle_disconnect(disconnect_id):
+# Called by customer
+@app.route("/customer/location", methods=["DELETE"])
+def delete_customer_location():
     """
-    Handles client disconnections.
+    Delete a customer's location by customer ID (CID).
 
-    Removes the client from the active lists (customers or technicians).
+    Expected query parameters:
+    - cid: string (Customer ID)
+
+    Returns:
+    - 200: Customer location deleted successfully
+    - 400: Customer ID (cid) is required
+    - 404: No location found for this customer
     """
-    # To disconnect customer pass sid as id, to disconnect technician pass tid as id
+    customer_id = request.args.get("cid")  # Get customer ID from query parameters
 
-    # Find and remove the customer or technician from active lists
-    for customer_id, sid in customer_connections.items():
-        if sid == disconnect_id:
-            del customer_connections[customer_id]
-            logger.info(f"Customer Service with id = {sid} is disconnected")
-            break
+    if not customer_id:
+        logger.error("Customer ID (cid) is required")
+        return jsonify({"error": "Customer ID (cid) is required"}), 400
 
-    # Optionally, you can also handle technician disconnection
-    for technician_id, status in active_technicians.items():
-        if status == "active" and disconnect_id == technician_id:
-            active_technicians[technician_id] = "inactive"  # Mark as inactive
-            logger.info(f"Technician {technician_id} status updated to inactive")
-            break
+    if customer_id in customer_loc:
+        del customer_loc[customer_id]
+        logger.info(f"Deleted location for customer {customer_id}")
+        return jsonify({"message": "Customer location deleted successfully"}), 200
+    else:
+        logger.warning(f"No location found for customer {customer_id}")
+        return jsonify({"message": "No location found for this customer"}), 404
 
-    print(f"Client disconnected: {disconnect_id}")
+
+# Called by technician
+@app.route("/technician/location", methods=["DELETE"])
+def delete_technician_location():
+    """
+    Delete a technician's location by technician ID (TID).
+
+    Expected query parameters:
+    - tid: string (Technician ID)
+
+    Returns:
+    - 200: Technician location deleted successfully
+    - 400: Technician ID (tid) is required
+    - 404: No location found for this technician
+    """
+    technician_id = request.args.get("tid")  # Get technician ID from query parameters
+
+    if not technician_id:
+        logger.error("Technician ID (tid) is required")
+        return jsonify({"error": "Technician ID (tid) is required"}), 400
+
+    if technician_id in technician_loc:
+        del technician_loc[technician_id]
+        logger.info(f"Deleted location for technician {technician_id}")
+        return jsonify({"message": "Technician location deleted successfully"}), 200
+    else:
+        logger.warning(f"No location found for technician {technician_id}")
+        return jsonify({"message": "No location found for this technician"}), 404
+
+
+# Called by technician
+@app.route("/delete/active_technician", methods=["DELETE"])
+def delete_active_technician():
+    """
+    Delete an active technician by technician ID (TID).
+
+    Expected query parameters:
+    - tid: string (Technician ID)
+
+    Returns:
+    - 200: Active technician deleted successfully
+    - 400: Technician ID (tid) is required
+    - 404: No active technician found with this ID
+    """
+    technician_id = request.args.get("tid")  # Get technician ID from query parameters
+
+    if not technician_id:
+        logger.error("Technician ID (tid) is required")
+        return jsonify({"error": "Technician ID (tid) is required"}), 400
+
+    if technician_id in active_technicians:
+        del active_technicians[technician_id]
+        logger.info(f"Deleted active technician {technician_id}")
+        return jsonify({"message": "Active technician deleted successfully"}), 200
+    else:
+        logger.warning(f"No active technician found with ID {technician_id}")
+        return jsonify({"message": "No active technician found with this ID"}), 404
+
+
+# Called by technician
+@app.route("/delete/booking", methods=["DELETE"])
+def delete_booking():
+    """
+    Delete an active technician by technician ID (TID).
+
+    Expected query parameters:
+    - tid: string (Technician ID)
+
+    Returns:
+    - 200: Active technician deleted successfully
+    - 400: Technician ID (tid) is required
+    - 404: No active technician found with this ID
+    """
+    technician_id = request.args.get("tid")  # Get technician ID from query parameters
+
+    if not technician_id:
+        logger.error("Technician ID (tid) is required")
+        return jsonify({"error": "Technician ID (tid) is required"}), 400
+
+    if technician_id in bookings:
+        del bookings[technician_id]
+        logger.info(f"Deleted booking for technician {technician_id}")
+        return jsonify({"message": "Booking deleted successfully"}), 200
+    else:
+        logger.warning(f"No booking found for technician {technician_id}")
+        return jsonify({"message": "No booking found for this technician"}), 404
 
 
 @with_hydra_config
@@ -356,9 +479,9 @@ def main(cfg: DictConfig):
         service_service_url=service_api_url,
     )
 
-    logger.info("Starting Flask and Websocket server...")
+    logger.info("Starting Flask server...")
 
-    socketio.run(app, **cfg.app.server)
+    app.run(host="0.0.0.0", port=cfg.app.server.port, debug=True)
 
 
 if __name__ == "__main__":

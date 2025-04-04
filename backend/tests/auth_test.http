@@ -7,10 +7,10 @@ POST http://127.0.0.1:{{port}}/register
 Content-Type: application/json
 
 {
-  "email": "vijay@example.com",
-  "phone": "1239867890",
-  "name": "vijay",
-  "hashed_password": "vijay"
+  "email": "john.doe@example.com",
+  "phone": "1234567890",
+  "name": "John Doe",
+  "hashed_password": {{hashed_password}}
 }
 
 ###
@@ -20,12 +20,12 @@ POST http://127.0.0.1:{{port}}/technician_register
 Content-Type: application/json
 
 {
-  "email": "ss@example.com",
-  "phone": "9876593210",
-  "name": "Jane",
+  "email": "jane.doe@example.com",
+  "phone": "9876543210",
+  "name": "Jane Doe",
   "id_proof_type": "Aadhaar",
   "id_proof_number": "123456789101",
-  "hashed_password": "1234",
+  "hashed_password": {{hashed_password}},
   "service_category": "Electrical Services"
 }
 
@@ -36,8 +36,8 @@ POST http://127.0.0.1:{{port}}/login
 Content-Type: application/json
 
 {
-  "email": "vijay@example.com",
-  "hashed_password": "vijay"
+  "email": "john.doe@example.com",
+  "hashed_password": {{hashed_password}}
 }
 
 ### (After successful login, copy the token from the response)

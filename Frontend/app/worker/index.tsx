@@ -66,6 +66,8 @@ const Index = () => {
         console.error("Error fetching technician details:", error);
       }
     };
+    storeDetails();
+    
 
     const initializeDefaultImage = async () => {
       try {
@@ -87,7 +89,6 @@ const Index = () => {
       }
     };
 
-    storeDetails();
     initializeDefaultImage();
 
     const backAction = () => {

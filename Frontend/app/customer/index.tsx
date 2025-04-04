@@ -12,6 +12,7 @@ import Toast from 'react-native-toast-message';
 import { domain, shadowStyles } from "../customStyles/custom";
 import Sidebar from '../components/CustomerComponents/SideBar';
 import { router } from 'expo-router';
+import * as Location from 'expo-location'; // 👈 Add this import
 import { BlurView } from 'expo-blur';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Asset } from 'expo-asset';
@@ -61,6 +62,34 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    const fetchUserLocation = async () => {
+      try {
+        const storedLocation = await AsyncStorage.getItem("userLocation");
+  
+        if (!storedLocation) {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            console.log('Permission to access location was denied');
+            return;
+          }
+  
+          const location = await Location.getCurrentPositionAsync({});
+          const coords = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          };
+  
+          await AsyncStorage.setItem("userLocation", JSON.stringify(coords));
+          console.log("Location stored:", coords);
+        } else {
+          console.log("Location already stored.");
+        }
+      } catch (error) {
+        console.error("Error fetching location:", error);
+      }
+    };
+    fetchUserLocation();
+
     const storeDetails = async () => {
       try {
         const email = await AsyncStorage.getItem("registerEmail");
@@ -73,6 +102,7 @@ const Index = () => {
         if (data) setData(data);
 
         await AsyncStorage.setItem("userInfo", JSON.stringify(data));
+        console.log(data)
       } catch (error) {
         console.error("Error fetching details:", error);
       }
@@ -91,7 +121,6 @@ const Index = () => {
         console.log('Error initializing default image:', error);
       }
     };
-
     initializeDefaultImage();
     AsyncStorage.getItem('pickedImage').then(setImageUri);
 
@@ -99,7 +128,6 @@ const Index = () => {
       BackHandler.exitApp();
       return true;
     };
-
     const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => backHandler.remove();
   }, [showToast]);

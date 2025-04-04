@@ -3,23 +3,43 @@ import { View, Text, Image, FlatList, TouchableOpacity, SafeAreaView, BackHandle
 import Timeline from "react-native-timeline-flatlist";
 import MapView, { Marker } from "react-native-maps";
 import { router } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+import { domain } from "@/app/customStyles/custom";
 
 const Status = () => {
+  const { technician_id, status } = useLocalSearchParams();
+  // console.log(technician_id,status)
+  const [technicianDetails, setTechnicianDetails] = useState<any>(null);
+
   const [completedTasks, setCompletedTasks] = useState(2);
 
   useEffect(() => {
+    const fetchTechnicianDetails = async () => {
+      try {
+        const response = await fetch(`http://${domain}:8001/technicians/${technician_id}`);
+        if (!response.ok) throw new Error("Failed to fetch technician details");
+        const data = await response.json();
+        console.log(data)
+        setTechnicianDetails(data);
+      } catch (error) {
+        console.error("Technician fetch error:", error);
+      }
+    };
+  
+    if (technician_id) {
+      fetchTechnicianDetails();
+    }
+  
     const onBackPress = () => {
       router.replace("/customer");
-      return true; 
+      return true;
     };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      onBackPress
-    );
-
+  
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  
     return () => backHandler.remove();
-  }, [router]);
+  }, [technician_id,router]);
+  
 
   const timelineData = [
     { time: "9:00 AM", title: "Registered", description: "Booking confirmed" },
@@ -52,7 +72,7 @@ const Status = () => {
         </TouchableOpacity>
         <Text className="pt-6 text-2xl  font-nunito-bold">Status Tracker</Text>
       </View>
-      <Text className="text-gray-300 text-md mt-4">Registered</Text>
+      <Text className="text-gray-800 text-md mt-7 ml-4">Registered</Text>
 
       <View className="flex-row justify-between items-center bg-white rounded-full p-4 mt-4">
         <View className="flex-row items-center">
@@ -61,11 +81,11 @@ const Status = () => {
             className="w-16 h-16 rounded-full" 
           />
           <View className="ml-4">
-            <Text className=" text-lg font-semibold">John Doe</Text>
-            <Text className="text-gray-300 text-sm mt-2">Plumber</Text>
+            <Text className=" text-lg font-semibold">{technicianDetails?technicianDetails.name:"No Technician"}</Text>
+            <Text className="text-gray-300 text-sm mt-2">{technicianDetails?technicianDetails.service_category:"Nothing"}</Text>
           </View>
         </View>
-        <Text className="text-green-400 font-semibold mr-4">Accepted</Text>
+        <Text className="text-green-400 font-semibold mr-4">{technicianDetails?"Accepted":"Yet to book"}</Text>
       </View>
 
       <Text className="text-3xl  mt-8 font-bold">Track</Text>

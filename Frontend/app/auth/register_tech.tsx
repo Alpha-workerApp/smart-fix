@@ -158,7 +158,7 @@ const Register = () => {
                   value={formData.id_proof_type}
                   onValueChange={(value) => handleInputChange("id_proof_type", value)}
                   items={[
-                    { label: "Aadhar Number", value: "Aadhar" },
+                    { label: "Aadhar Number", value: "Aadhaar" },
                     { label: "PAN Number", value: "PAN" },
                     { label: "Voter ID", value: "Voter ID" },
                   ]}
@@ -193,10 +193,17 @@ const Register = () => {
                   value={formData.service_category}
                   onValueChange={(value) => handleInputChange("service_category", value)}
                   items={[
-                    { label: "Electrician", value: "Electrician" },
+                    { label: "Electrician", value: "Electrical Services" },
                     { label: "Plumber", value: "Plumber" },
-                    { label: "Carpenter", value: "Carpenter" },
                     { label: "Mechanic", value: "Mechanic" },
+                    { label: "AC Services", value: "AC & HVAC Maintenance" },
+                    { label: "Carpentry", value: "Carpentry Services" },
+                    { label: "House Cleaning", value: "House Cleaning Services" },
+                    { label: "Accessories Repair", value: "Microwave Repair" },
+                    { label: "Painting", value: "Painting Services" },
+                    { label: "Refrigerator Repair", value: "Refrigerator Repair" },
+                    { label: "Washing Machine Repair", value: "Washing Machine Repair" },
+
                   ]}
                   style={{
                     inputAndroid: {

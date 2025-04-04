@@ -7,11 +7,11 @@ POST http://localhost:{{port}}/technicians
 Content-Type: application/json
 
 {
-  "email": "jane.doe@example.com",
-  "phone": "9876543210",
+  "email": "suryaa@example.com",
+  "phone": "9878763210",
   "name": "Jane Doe",
   "id_proof_type": "Aadhaar",  
-  "id_proof_number": "123456789101",
+  "id_proof_number": "123401989101",
   "hashed_password": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5",
   "service_category": "Electrical Services"
 }
@@ -21,11 +21,11 @@ Content-Type: application/json
 @TID=33d9a4f4-e084-462a-9f99-a720c3b0e8b7
 
 ### Get technician by TID
-GET http://localhost:{{port}}/technicians/55b93cb7-27ec-403d-9f0e-09a487dd987d
+GET http://localhost:{{port}}/technicians/{{TID}}
 
 ### Get Technician by Email
 GET http://localhost:{{port}}/technicians?email=suryaa@example.com
- 
+
 ### Update Technician by TID
 PUT http://localhost:{{port}}/technicians/{{TID}} 
 Content-Type: application/json
@@ -36,7 +36,7 @@ Content-Type: application/json
 }
 
 ### Delete Technician by TID
-DELETE http://localhost:{{port}}/technicians/{{TID}} 
+DELETE http://localhost:{{port}}/technicians/46fe5f22-f497-421a-a62b-d9f80a0f2005 
 
 ### Get Available Technicians (Example)
 GET http://localhost:{{port}}/technicians/available?service_category=Plumbing%20Services&longitude=77.5946&latitude=12.9716

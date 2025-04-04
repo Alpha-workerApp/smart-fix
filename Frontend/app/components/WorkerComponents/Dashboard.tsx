@@ -26,7 +26,7 @@ const Dashboard = () => {
         const data = await response.json();
         console.log("Fetched Technician Data:", data);
 
-        const changeStatus = await fetch(`http://${domain}:8009/technicians/status`, {
+        const changeStatus = await fetch(`http://${domain}:8006/technicians/status`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const Dashboard = () => {
     };
 
     fetchDetails();
-  }, [isToggled]); // Runs when `isToggled` changes
+  }, [isToggled]); 
 
   return (
     <View>
