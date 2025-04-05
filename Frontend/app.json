@@ -1,5 +1,6 @@
 {
   "expo": {
+    
     "name": "Smart Fix",
     "slug": "React-native-clerk-expirement",
     "version": "1.0.0",
@@ -12,10 +13,12 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/logo-img.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.suryaavijay.Reactnativeclerkexpirement"
     },
     "web": {
       "bundler": "metro",
@@ -23,6 +26,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      ["@react-native-firebase/app", "@react-native-firebase/auth"],
       "expo-router",
       [
         "expo-splash-screen",
@@ -36,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "27cff967-94f3-4857-bf7e-0e07424e35b3"
+      }
     }
   }
 }

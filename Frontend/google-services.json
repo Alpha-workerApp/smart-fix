@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "667289386135",
+    "project_id": "smart-fix-f0963",
+    "storage_bucket": "smart-fix-f0963.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667289386135:android:8466aa66c2bddacdf17dd2",
+        "android_client_info": {
+          "package_name": "com.alpha.smart_fix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcR9UTb1-43l9KDcrOsu5elwiEO-04sUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
