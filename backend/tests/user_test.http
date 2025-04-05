@@ -17,7 +17,7 @@ Content-Type: application/json
 ### This uid is received on the create user response
 @uid=83075689-9319-419b-a60c-9f9235960189
 
-GET http://localhost:{{port}}/users/{{uid}}
+GET http://localhost:8000/users/18dc5340-3af2-41de-9aaf-c681ccde45f9
 
 ### Get User by Email
 GET http://localhost:{{port}}/users?email=john.doe@example.com

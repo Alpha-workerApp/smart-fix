@@ -1,7 +1,16 @@
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Image, BackHandler } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
-import LottieView from 'lottie-react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  BackHandler,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Notification = {
   id: number;
@@ -18,17 +27,28 @@ const Notification = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        // Replace with your actual API endpoint
-        // const response = await fetch("http://192.168.83.89:8003/notifications");
-        // if (response.ok) {
-        //   const data = await response.json();
-        //   setNotifications(data);
-        // } else {
-        //   console.error("Error fetching notifications");
-        // }
-        console.log("notification area")
+        const bookingString = await AsyncStorage.getItem("latestBooking");
+        if (bookingString) {
+          const booking = JSON.parse(bookingString);
+
+          const formattedNotification: Notification = {
+            id: Date.now(),
+            title: "Booking Confirmed",
+            message: `Service: ${booking.serviceName || "N/A"}\nCategory: ${
+              booking.serviceCategory || "N/A"
+            }\nCost: ₹${booking.details?.price || "N/A"}\nWorker: ${
+              booking.technicianName || "N/A"
+            }`,
+            time: new Date().toLocaleTimeString(),
+          };
+
+          setNotifications([formattedNotification]);
+        } else {
+          setNotifications([]);
+        }
       } catch (error) {
-        console.error("Network error", error);
+        console.error("Error reading local storage", error);
+        setNotifications([]);
       } finally {
         setLoading(false);
       }
@@ -70,14 +90,32 @@ const Notification = () => {
           </View>
         ) : notifications.length > 0 ? (
           notifications.map((notification) => (
-            <View key={notification.id} className="bg-gray-100 p-4 rounded-lg my-2">
-              <Text className="text-lg font-nunito-semibold">{notification.title}</Text>
-              <Text className="text-gray-600">{notification.message}</Text>
-              <Text className="text-gray-400 text-sm mt-1">{notification.time}</Text>
+            <View
+              key={notification.id}
+              className="bg-blue-100 p-4 rounded-xl my-2 shadow-md"
+            >
+              <Text className="text-base font-nunito-bold text-blue-900 mb-2">
+                {notification.title}
+              </Text>
+              <View className="ml-2">
+                {notification.message.split("\n").map((line, index) => (
+                  <Text
+                    key={index}
+                    className="text-gray-700 font-nunito-regular"
+                  >
+                    {line}
+                  </Text>
+                ))}
+              </View>
+              <Text className="text-gray-500 text-xs mt-2 text-right">
+                {notification.time}
+              </Text>
             </View>
           ))
         ) : (
-          <Text className="text-gray-500 text-center mt-10">No notifications available.</Text>
+          <Text className="text-gray-500 text-center mt-10">
+            No notifications available.
+          </Text>
         )}
       </ScrollView>
 
@@ -87,7 +125,10 @@ const Notification = () => {
           onPress={() => router.back()}
           className="bg-white shadow-sky-300 shadow-2xl rounded-full p-4"
         >
-          <Image source={require("../../../assets/icons/close-icon.png")} className="size-6" />
+          <Image
+            source={require("../../../assets/icons/close-icon.png")}
+            className="size-6"
+          />
         </TouchableOpacity>
       </View>
     </View>

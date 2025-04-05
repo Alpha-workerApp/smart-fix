@@ -9,11 +9,14 @@ import {
   BackHandler,
   Alert,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { domain } from "@/app/customStyles/custom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BlurView } from "expo-blur"; // ✅ Imported here
+import LottieView from "lottie-react-native";
 
 type Service = {
   SID: string;
@@ -33,6 +36,8 @@ const ServiceSearch = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [userid, setuserid] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState<{ technician_id: string; status: string } | null>(null);
 
   useEffect(() => {
     const fetchservice = async () => {
@@ -53,12 +58,8 @@ const ServiceSearch = () => {
 
     const data = async () => {
       const email = await AsyncStorage.getItem("registerEmail");
-      console.log(email);
       const fetchdata = await fetch(`http://${domain}:8000/users?email=${email}`);
-      if (!fetchdata.ok) {
-        console.log("error");
-        return;
-      }
+      if (!fetchdata.ok) return;
       const data = await fetchdata.json();
       setuserid(data.uid);
     };
@@ -91,7 +92,6 @@ const ServiceSearch = () => {
     };
 
     const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
-
     return () => backHandler.remove();
   }, [searchText, selectedCategory, fullServices]);
 
@@ -103,15 +103,15 @@ const ServiceSearch = () => {
     try {
       const locationString = await AsyncStorage.getItem("userLocation");
       const userInfoString = await AsyncStorage.getItem("userInfo");
-  
+
       if (!locationString || !userInfoString) {
         Alert.alert("Missing Info", "Location or user data not found.");
         return;
       }
-  
+
       const { latitude, longitude } = JSON.parse(locationString);
       const { uid } = JSON.parse(userInfoString);
-  
+
       const bookingData = {
         customer_id: uid,
         service_id: service.SID,
@@ -119,7 +119,7 @@ const ServiceSearch = () => {
         latitude,
         longitude,
       };
-  
+
       const response = await fetch(`http://${domain}:8006/booking/request`, {
         method: "POST",
         headers: {
@@ -127,32 +127,46 @@ const ServiceSearch = () => {
         },
         body: JSON.stringify(bookingData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to book the service");
       }
-  
-      const result = await response.json();
-      Alert.alert("Success", "Booking request sent successfully!");
-  
-      // Optionally, navigate to another screen or show confirmation
-      router.push({
-        pathname: "/components/CustomerComponents/status",
-        params: {
-          technician_id: result.technician_id,
-          status: result.status,
-        },
-      });
 
-  
-    } catch (error: any) {
-      // Even if the error is unknown, show the friendly alert
+      const result = await response.json();
+
+      const notificationDetails = {
+        technician_id: result.technician_id,
+        status: result.status,
+        serviceName: service.serviceName || "N/A",
+        serviceCategory: service.serviceCategory || "N/A",
+        price:
+          service.details.prices
+            ? Object.values(service.details.prices)[0]
+            : service.details.price || "N/A",
+      };
+
+      await AsyncStorage.setItem("latestBooking", JSON.stringify(notificationDetails));
+
+      setBookingDetails({ technician_id: result.technician_id, status: result.status });
+      setModalVisible(true);
+
+      setTimeout(() => {
+        setModalVisible(false);
+        router.push({
+          pathname: "/components/CustomerComponents/status",
+          params: {
+            technician_id: result.technician_id,
+            status: result.status,
+          },
+        });
+      }, 2000);
+
+    } catch (error) {
       Alert.alert("Oops!", "No technician available at this moment");
     } finally {
       setBookingServiceId(null);
     }
   };
-  
 
   const renderItem = ({ item }: { item: Service }) => (
     <View className="bg-white p-4 my-2 rounded-3xl shadow-md">
@@ -161,13 +175,13 @@ const ServiceSearch = () => {
       <Text className="font-nunito-bold">
         Cost:{" "}
         {item.details.prices
-          ? Object.values(item.details.prices)[0]
-          : item.details.price || "N/A"}
+          ? Object.values(item.details.prices)[0].slice(3)
+          : (item.details.price || "N/A").slice(3)}
       </Text>
       <TouchableOpacity
         className="bg-blue-500 w-[100px] mt-3 rounded-full py-2 items-center"
         onPress={() => handleBooking(item)}
-        disabled={bookingServiceId !== null} // Optional: prevent multiple clicks
+        disabled={bookingServiceId !== null}
       >
         {bookingServiceId === item.SID ? (
           <ActivityIndicator color="#fff" />
@@ -175,7 +189,6 @@ const ServiceSearch = () => {
           <Text className="font-nunito-semibold text-base px-3 text-white text-center">Book Now</Text>
         )}
       </TouchableOpacity>
-
     </View>
   );
 
@@ -207,7 +220,7 @@ const ServiceSearch = () => {
         </View>
       </View>
 
-      {/* Category Filter Buttons */}
+      {/* Category Filter */}
       <View className="h-[55px]">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="my-4 px-5">
           {categories.map((category) => (
@@ -226,7 +239,7 @@ const ServiceSearch = () => {
         </ScrollView>
       </View>
 
-      {/* Services List */}
+      {/* Service List */}
       <View className="px-5 flex-1">
         {displayedServices.length > 0 ? (
           <FlatList
@@ -241,6 +254,31 @@ const ServiceSearch = () => {
           </View>
         )}
       </View>
+
+      {/* ✅ Modal Popup with Blur Background */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <BlurView
+          intensity={50}
+          tint="light"
+          className="flex-1 justify-center items-center"
+        >
+          <View className="bg-white p-6 rounded-2xl w-[80%] items-center shadow-lg">
+            <LottieView
+                      source={require("../../../assets/animations/Success booking.json")}
+                      autoPlay
+                      loop={false}
+                      style={{ width: 90, height: 90 }}
+                    />
+            <Text className="text-lg font-bold mb-2 text-green-600">Booking Confirmed!</Text>
+            <Text className="text-center text-gray-700">Redirecting to status screen...</Text>
+          </View>
+        </BlurView>
+      </Modal>
     </View>
   );
 };
